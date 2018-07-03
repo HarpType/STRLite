@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class StrliteConfig(AppConfig):
-    name = 'strlite'
+    name = 'strl_app'
