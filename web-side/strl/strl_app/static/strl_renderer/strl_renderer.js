@@ -1,11 +1,12 @@
 var canvas = SVG('canvas').size('100%', '100%')
-var robot = canvas.image("{% static 'pictures/turtlebot100px.png' %}", 50, 50)
+//var robot = canvas.image("strl_app/media/pictures/turtlebot100px.png", 50, 50)
+var robot = canvas.circle(25)
 //var robot = canvas.rect(50,50)
 var robot_angle = 0.0
-var robot_coord_x = 10.0
-var robot_coord_y = 10.0
-var center_x = 0
-var center_y = 0
+var robot_coord_x = 25.0
+var robot_coord_y = 25.0
+var center_x = 25
+var center_y = 25
 
 
 $(document).bind('keypress',pressed);
@@ -31,8 +32,8 @@ function robot_update()
 {    
     console.log(robot.x(), " ", robot.y())
     robot.rotate(robot_angle, robot.cx(), robot.cy())
-    robot.x(robot_coord_x)
-    robot.y(robot_coord_y)
+    robot.x(robot_coord_x - center_x)
+    robot.y(robot_coord_y - center_y)
 }
 
 function pressed(e)
