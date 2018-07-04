@@ -8,8 +8,9 @@ import random
 
 import pymunk
 
-rel_path = 'web-side/strl/strl_app/relation'
+rel_path = 'strl/relation'
 cur_path = os.getcwd()
+print(cur_path)
 # to STRLite
 par_path = Path(cur_path).parent
 # the path where .dat files exist
@@ -31,6 +32,7 @@ def add_ball(space):
 	body = pymunk.Body(mass, moment)
 
 	x = random.randint(150, 380)
+	body.position = (x, 550)
 	shape = pymunk.Circle(body, radius)
 
 	space.add(body, shape)
@@ -41,12 +43,17 @@ def add_ball(space):
 def send_balls(balls):
 	balls_list = list()
 	for ball in balls:
-		ball_dir = {'x': ball.body.position.x(), 'y': ball.body.position.y(), 'r': ball.radius}
-		print(ball_dir)
+		ball_dir = {'x': 600-ball.body.position.x, 'y': 600-ball.body.position.y, 'r': ball.radius}
 		balls_list.append(ball_dir)
-
-	pickle.dump(balls_list, data1)
-
+	
+	print('balls_list: ', balls_list)
+	ball_data = pickle.dumps(balls_list)
+	data_size = len(ball_data)
+	print('data_size:', data_size)
+	str_data_size = '{:>4}'.format(str(data_size))
+	
+	data1[2:6] = bytes(str_data_size, 'utf-8')
+	data1[6:6+data_size] = ball_data
 
 if __name__ == '__main__':
 	space = pymunk.Space()
@@ -56,10 +63,10 @@ if __name__ == '__main__':
 	balls = list()
 	ticks_to_next_ball = 10
 
-	data1[0] = "R"
 
 	while True:
-		if data2[0] == 'S':
+		print("while")
+		if data2[:1] == b'S':
 			break
 
 		ticks_to_next_ball -= 1
@@ -78,6 +85,8 @@ if __name__ == '__main__':
 			balls.remove(ball)
 
 		space.step(dt)
+
+		data1[:1] = b"R"
 
 		send_balls(balls)
 
