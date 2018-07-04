@@ -19,12 +19,13 @@ function coordrequest()
     xhr.send()
     if (xhr.status != 200){
         alert(xhr.status + ': ' + xhr.statusText )
-        
     }
     else{
         var data = JSON.parse(xhr.responseText)
+        robot_coord_x = data['x']
+        robot_coord_y = data['y']
+        robot_update()
         console.log(data)
-        
     }
 }
 
