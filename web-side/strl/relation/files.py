@@ -1,16 +1,6 @@
 import os
 from pathlib import Path
-import sys
 
-
-"""files_path = os.getcwd()
-
-f1 = None
-f2 = None
-
-data1 = None
-data2 = None
-"""
 cur_path = os.getcwd()
 child_file = 'gravity_test.py'
 # to STRLite
