@@ -39,3 +39,19 @@ body{
 #canvas, .w100p{
     width: 100%;
 }
+
+#btnStart{
+  position: relative;
+  top: 10px;
+  left: 10px;
+  width: 100px;
+  height: 35px;
+}
+
+#btnStop{
+  position: relative;
+  top: 10px;
+  left: 10px;
+  width: 100px;
+  height: 35px;
+}

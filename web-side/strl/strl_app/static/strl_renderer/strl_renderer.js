@@ -4,6 +4,7 @@ var canvas = SVG('canvas').size('100%', '100%') //кансвас на котор
 var debug = false
 var state = STATE_STOP
 //var robot = canvas.image("strl_app/media/pictures/turtlebot100px.png", 50, 50)
+document.getElementById('btnStop').disabled = true
 function CreateCircle(sx,sy,angle, rad)
 {
     var circle = {
@@ -76,9 +77,18 @@ function initE()
     xhr.open('GET', 'start', true)
     xhr.addEventListener('readystatechange', function(){
         if ((xhr.readyState==4)&&(xhr.status == 200)){
-            console.log('Симуляция началась ')
-            state = STATE_RUN
-            setTimeout(timer, 33)
+            data = JSON.parse(xhr.responseText)
+            if (data.st == "ready"){
+                console.log('Симуляция началась ')
+                state = STATE_RUN
+                setTimeout(timer, 33)
+                document.getElementById('btnStop').disabled = false
+                document.getElementById('btnStart').disabled = true
+            }
+            else{
+                alert("Ошибка инициализации: ", data.st)
+
+            }
         }
         else{
             console.log(xhr.readyState)
@@ -98,6 +108,8 @@ function stopE()
         if ((xhr.readyState==4)&&(xhr.status == 200)){
             console.log('Симуляция становлена ')
             state = STATE_STOP
+            document.getElementById('btnStop').disabled = true
+            document.getElementById('btnStart').disabled = false
             
         }
         else{
@@ -152,6 +164,7 @@ function coordrequest()
                 if (debug)
                     console.log("Обработка на сервере")                
             }
+            
         }
 
     })
