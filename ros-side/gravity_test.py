@@ -1,25 +1,8 @@
 import sys
 import time
-
 import random
-import pygame
-from pygame.locals import *
 import pymunk
-
-rel_path = 'strl/relation'
-cur_path = os.getcwd()
-print(cur_path)
-# to STRLite
-par_path = Path(cur_path).parent
-# the path where .dat files exist
-files_path = par_path.joinpath(*rel_path.split('/'))
-
-f1 = open(str(files_path.joinpath('c_to_p.dat')), 'r+')
-f2 = open(str(files_path.joinpath('p_to_c.dat')), 'r+')
-size = 1024
-
-data1 = mmap.mmap(f1.fileno(), size)
-data2 = mmap.mmap(f2.fileno(), size)
+import pickle
 
 
 def add_ball(space):
@@ -38,34 +21,29 @@ def add_ball(space):
 	return shape
 
 
-def send_balls(balls):
+def stdout_balls(balls):
 	balls_list = list()
+
 	for ball in balls:
-		ball_dir = {'x': 600-ball.body.position.x, 'y': 600-ball.body.position.y, 'r': ball.radius}
+		ball_dir = {'x': ball.body.position.x, 'y': ball.body.position.y, 'r': ball.radius}
 		balls_list.append(ball_dir)
 
-	print(balls_list)
+	print("gravity: ", balls_list)
+
+	sys.stdout.write(str(balls_list) + '\n')
+
 
 if __name__ == '__main__':
-	pygame.init()
-	screen = pygame.display.set_mode((600, 600))
-	pygame.display.set_caption("Joints. Just wait and the L will tip over")
-	clock = pygame.time.Clock()
-
 	space = pymunk.Space()
 	space.gravity = (0, -900)
 	dt = 1 / 50
 
 	balls = list()
-	draw_options = pygame_util.DrawOptions(screen)
 	ticks_to_next_ball = 10
 
+	sys.stdout.write("Ready\n")
+
 	while True:
-		for event in pygame.event.get():
-			if event.type == QUIT:
-				sys.exit(0)
-			elif event.type == KEYDOWN and event.key == K_ESCAPE:
-				sys.exit(0)
 
 		ticks_to_next_ball -= 1
 		if ticks_to_next_ball <= 0:
@@ -84,12 +62,6 @@ if __name__ == '__main__':
 
 		space.step(dt)
 
-		data1[:1] = b"R"
+		stdout_balls(balls)
 
-		send_balls(balls)
-
-		screen.fill((255, 255, 255))
-		space.debug_draw(draw_options)
-
-		pygame.display.flip()
-		clock.tick(50)
+		time.sleep(dt)
