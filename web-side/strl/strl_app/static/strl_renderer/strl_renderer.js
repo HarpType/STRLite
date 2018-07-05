@@ -4,6 +4,7 @@ var canvas = SVG('canvas').size('100%', '100%') //кансвас на котор
 var debug = false
 var state = STATE_STOP
 //var robot = canvas.image("strl_app/media/pictures/turtlebot100px.png", 50, 50)
+document.getElementById('btnStop').disabled = true
 function CreateCircle(sx,sy,angle, rad)
 {
     var circle = {
@@ -15,7 +16,7 @@ function CreateCircle(sx,sy,angle, rad)
         a: angle,
         img: canvas.circle(rad),
 
-    }   
+    }
     circle.img.attr({
         'fill': '#fff'
     })
@@ -43,7 +44,7 @@ function CreateBox(sx,sy,angle, w, h)
         a: angle,
         img: canvas.rect(w,h),
 
-    }   
+    }
     box.img.attr({
         'fill': '#fff'
     })
@@ -72,50 +73,59 @@ $('#btnStop').bind('click',stopE)
 
 function initE()
 {
-    console.log('Start request')
+    document.getElementById('btnStop').disabled = false
+    document.getElementById('btnStart').disabled = true
     var xhr = new XMLHttpRequest()
     xhr.open('GET', 'start', true)
     xhr.addEventListener('readystatechange', function(){
         if ((xhr.readyState==4)&&(xhr.status == 200)){
             data = JSON.parse(xhr.responseText)
-            if (data.st == 'ready'){
+            if (data.st == "ready"){
                 console.log('Симуляция началась ')
                 state = STATE_RUN
                 setTimeout(timer, 33)
+                document.getElementById('btnStop').disabled = false
+                document.getElementById('btnStart').disabled = true
+
             }
             else{
-                alert('Ошибка запуска Е блока: ', data.st)
+                alert("Ошибка инициализации: ", data.st)
+                document.getElementById('btnStop').disabled = true
+                document.getElementById('btnStart').disabled = false
+
             }
         }
         else{
             console.log(xhr.readyState)
-
             state = STATE_STOP
         }
 
     })
     xhr.send()
-        
+
 }
 
 function stopE()
 {
+    state = STATE_STOP
     var xhr = new XMLHttpRequest()
     xhr.open('GET', 'stop', true)
     xhr.addEventListener('readystatechange', function(){
         if ((xhr.readyState==4)&&(xhr.status == 200)){
             console.log('Симуляция становлена ')
-            state = STATE_STOP
-            
+
+            document.getElementById('btnStop').disabled = true
+            document.getElementById('btnStart').disabled = false
+
         }
         else{
             console.log(xhr.readyState)
-            
+
         }
 
     })
     xhr.send()
-        
+
 }
 
 var data
@@ -128,12 +138,12 @@ function coordrequest()
     xhr.send()
     if (xhr.status != 200){
         alert(xhr.status + ': ' + xhr.statusText )
-        
+
     }
     else{
         var data = JSON.parse(xhr.responseText)
         console.log(data)
-        
+
     }*/
     var xhr = new XMLHttpRequest()
     xhr.open('GET', 'properties', true)
@@ -141,12 +151,12 @@ function coordrequest()
         if ((xhr.readyState==4)&&(xhr.status == 200)){
             if (debug)
                 console.log('Данные получены')
-            
+
             data = JSON.parse(xhr.responseText)
-            console.log(data)
+            //console.log(data)
             scene_recreate()
-            
-        }   
+
+        }
         else
         {
 
@@ -158,8 +168,9 @@ function coordrequest()
             }
             if (xhr.readyState==3){
                 if (debug)
-                    console.log("Обработка на сервере")                
+                    console.log("Обработка на сервере")
             }
+
         }
 
     })
@@ -168,7 +179,6 @@ function coordrequest()
 
 function timer()
 {
-    console.log(state)
     if (state == STATE_RUN){
         coordrequest()
         setTimeout(timer, 33)

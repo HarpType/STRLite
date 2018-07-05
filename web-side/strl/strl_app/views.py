@@ -10,6 +10,8 @@ import subprocess
 from queue import Queue, Empty
 from threading import Thread
 
+
+#for communication between server and gravity
 from relation import files, bridge
 
 
@@ -17,7 +19,10 @@ from relation import files, bridge
 # editor view is just from template in urls
 
 def stop(request):
-    bridge.proc.stdout.write('Stop\n')
+    # stop reading thread
+    bridge.stop_bridge = True
+    # bridge.proc.stdout.write('Stop\n')
+    # stop gravity.py
     bridge.proc.terminate()
     return HttpResponse('')
 
@@ -26,15 +31,12 @@ def properties(request):
     try:
         str_data = bridge.q.get(timeout=1)
     except Empty:
-        print('properties: no output yet')
         return HttpResponse('[]')
     else:
-        print("string list: ", str_data)
         data_to_send = ast.literal_eval(str_data[:-1])
         for i in data_to_send:
-            i['id'] = 1
-            i['a'] = 45.0
-        print('properties: ', data_to_send)
+            i["id"] = 1
+            i["a"] = 0
         return HttpResponse(json.dumps(data_to_send))
 
 
@@ -43,20 +45,24 @@ def start(request):
                                   stdout=subprocess.PIPE, universal_newlines=True,
                                   bufsize=1)
     bridge.q = Queue()
+    bridge.stop_bridge = False
     reading = Thread(target=bridge.enqueue_output, args=(bridge.proc.stdout, bridge.q))
     reading.daemon = True
     reading.start()
     try:
         line = bridge.q.get(timeout=3)
     except Empty:
-        print('start: no output yet')
-        bridge.proc.stdout.write('Stop\n')
+        # stop reading thread
+        # bridge.proc.stdout.write('Stop\n')
+        bridge.stop_bridge = True
         return HttpResponse('ERROR')
     else:
         if line == 'Ready\n':
             return HttpResponse(json.dumps({'st': 'ready'}))
         else:
-            bridge.proc.stdout.write('Stop\n')
+            # stop reading thread
+            # bridge.proc.stdout.write('Stop\n')
+            bridge.stop_bridge = True
             return HttpResponse('ERROR')
 
 
