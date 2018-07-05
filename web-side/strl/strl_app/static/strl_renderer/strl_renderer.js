@@ -107,12 +107,13 @@ function initE()
 
 function stopE()
 {
+    state = STATE_STOP
     var xhr = new XMLHttpRequest()
     xhr.open('GET', 'stop', true)
     xhr.addEventListener('readystatechange', function(){
         if ((xhr.readyState==4)&&(xhr.status == 200)){
             console.log('Симуляция становлена ')
-            state = STATE_STOP
+            
             document.getElementById('btnStop').disabled = true
             document.getElementById('btnStart').disabled = false
             
