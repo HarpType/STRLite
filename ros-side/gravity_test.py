@@ -1,26 +1,11 @@
-import os
-from pathlib import Path
-import mmap
-import pickle
+import sys
 import time
 
 import random
-
+import pygame
+from pygame.locals import *
 import pymunk
-
-rel_path = 'web-side/strl/strl_app/relation'
-cur_path = os.getcwd()
-# to STRLite
-par_path = Path(cur_path).parent
-# the path where .dat files exist
-files_path = par_path.joinpath(*rel_path.split('/'))
-
-f1 = open(str(files_path.joinpath('c_to_p.dat')), 'r+')
-f2 = open(str(files_path.joinpath('p_to_c.dat')), 'r+')
-size = 1024
-
-data1 = mmap.mmap(f1.fileno(), size)
-data2 = mmap.mmap(f2.fileno(), size)
+from pymunk import pygame_util
 
 
 def add_ball(space):
@@ -30,7 +15,8 @@ def add_ball(space):
 	moment = pymunk.moment_for_circle(mass, 0, radius)
 	body = pymunk.Body(mass, moment)
 
-	x = random.randint(150, 380)
+	x = random.randint(160, 380)
+	body.position = (x, 550)
 	shape = pymunk.Circle(body, radius)
 
 	space.add(body, shape)
@@ -41,26 +27,32 @@ def add_ball(space):
 def send_balls(balls):
 	balls_list = list()
 	for ball in balls:
-		ball_dir = {'x': ball.body.position.x(), 'y': ball.body.position.y(), 'r': ball.radius}
-		print(ball_dir)
+		ball_dir = {'x': 600-ball.body.position.x, 'y': 600-ball.body.position.y, 'r': ball.radius}
 		balls_list.append(ball_dir)
 
-	pickle.dump(balls_list, data1)
+	print(balls_list)
 
 
 if __name__ == '__main__':
+	pygame.init()
+	screen = pygame.display.set_mode((600, 600))
+	pygame.display.set_caption("Joints. Just wait and the L will tip over")
+	clock = pygame.time.Clock()
+
 	space = pymunk.Space()
 	space.gravity = (0, -900)
 	dt = 1 / 50
 
 	balls = list()
+	draw_options = pygame_util.DrawOptions(screen)
 	ticks_to_next_ball = 10
 
-	data1[0] = "R"
-
 	while True:
-		if data2[0] == 'S':
-			break
+		for event in pygame.event.get():
+			if event.type == QUIT:
+				sys.exit(0)
+			elif event.type == KEYDOWN and event.key == K_ESCAPE:
+				sys.exit(0)
 
 		ticks_to_next_ball -= 1
 		if ticks_to_next_ball <= 0:
@@ -81,4 +73,8 @@ if __name__ == '__main__':
 
 		send_balls(balls)
 
-		time.sleep(dt)
+		screen.fill((255, 255, 255))
+		space.debug_draw(draw_options)
+
+		pygame.display.flip()
+		clock.tick(50)
