@@ -5,7 +5,21 @@ import random
 import pygame
 from pygame.locals import *
 import pymunk
-from pymunk import pygame_util
+
+rel_path = 'strl/relation'
+cur_path = os.getcwd()
+print(cur_path)
+# to STRLite
+par_path = Path(cur_path).parent
+# the path where .dat files exist
+files_path = par_path.joinpath(*rel_path.split('/'))
+
+f1 = open(str(files_path.joinpath('c_to_p.dat')), 'r+')
+f2 = open(str(files_path.joinpath('p_to_c.dat')), 'r+')
+size = 1024
+
+data1 = mmap.mmap(f1.fileno(), size)
+data2 = mmap.mmap(f2.fileno(), size)
 
 
 def add_ball(space):
@@ -31,7 +45,6 @@ def send_balls(balls):
 		balls_list.append(ball_dir)
 
 	print(balls_list)
-
 
 if __name__ == '__main__':
 	pygame.init()
@@ -70,6 +83,8 @@ if __name__ == '__main__':
 			balls.remove(ball)
 
 		space.step(dt)
+
+		data1[:1] = b"R"
 
 		send_balls(balls)
 

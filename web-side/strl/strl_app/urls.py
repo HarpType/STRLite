@@ -12,5 +12,7 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('editor/', TemplateView.as_view(template_name='editor.html'), name='editor'),
     path('signup/', views.SignUp.as_view(), name='signup'),
-    path('editor/properties', views.properties, name='properties')
+    path('editor/properties', views.properties, name='properties'),
+    path('editor/start', views.start, name='start'),
+    path('editor/stop', views.stop, name='stop'),
 ] # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
