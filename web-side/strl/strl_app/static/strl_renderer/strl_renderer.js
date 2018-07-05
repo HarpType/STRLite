@@ -73,6 +73,8 @@ $('#btnStop').bind('click',stopE)
 
 function initE()
 {
+    document.getElementById('btnStop').disabled = false
+    document.getElementById('btnStart').disabled = true
     var xhr = new XMLHttpRequest()
     xhr.open('GET', 'start', true)
     xhr.addEventListener('readystatechange', function(){
@@ -84,9 +86,12 @@ function initE()
                 setTimeout(timer, 33)
                 document.getElementById('btnStop').disabled = false
                 document.getElementById('btnStart').disabled = true
+                
             }
             else{
                 alert("Ошибка инициализации: ", data.st)
+                document.getElementById('btnStop').disabled = true
+                document.getElementById('btnStart').disabled = false
 
             }
         }
