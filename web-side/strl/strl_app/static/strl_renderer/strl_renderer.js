@@ -3,24 +3,26 @@ const STATE_RUN = 1
 var canvas = SVG('canvas').size('100%', '100%') //кансвас на котором будем создавать объекты
 var debug = false
 var state = STATE_STOP
+var cso = 0 //Current Selected Object
 //var robot = canvas.image("strl_app/media/pictures/turtlebot100px.png", 50, 50)
 document.getElementById('btnStop').disabled = true
 function CreateCircle(sx,sy,angle, rad)
 {
     var circle = {
+        type: 'circle',
         x: sx,
         y: sy,
         r: rad,
-        cx: rad / 2.0,
-        cy: rad / 2.0,
+        cx: rad,
+        cy: rad,
         a: angle,
-        img: canvas.circle(rad),
+        img: canvas.circle(2*rad),
 
     }   
     circle.img.attr({
         'fill': '#fff'
     })
-    circle.dir = canvas.line(circle.cx, circle.cy,  rad, circle.cy).stroke({width: 1})
+    circle.dir = canvas.line(circle.cx, circle.cy,  rad*2, circle.cy).stroke({width: 1})
     circle.dir.attr({
         'stroke': '#00f'
     })
@@ -35,6 +37,7 @@ function CreateCircle(sx,sy,angle, rad)
 function CreateBox(sx,sy,angle, w, h)
 {
     var box = {
+        type: 'box',
         x: sx,
         y: sy,
         w: w,
@@ -63,7 +66,10 @@ function CreateBox(sx,sy,angle, w, h)
 
 var scene = []
 
-
+function btn_create_circle()
+{
+    CreateCircle($('#canvas').width() / 2.0, $('#canvas').height() / 2.0, )
+}
 
 
 
@@ -110,8 +116,11 @@ function stopE()
     state = STATE_STOP
     var xhr = new XMLHttpRequest()
     xhr.open('GET', 'stop', true)
+    document.getElementById('btnStop').disabled = true
+    document.getElementById('btnStart').disabled = false
     xhr.addEventListener('readystatechange', function(){
         if ((xhr.readyState==4)&&(xhr.status == 200)){
+
             console.log('Симуляция становлена ')
             
             document.getElementById('btnStop').disabled = true
@@ -243,4 +252,75 @@ function object_update(index)
     scene[index].dir.rotate(scene[index].a, scene[index].img.cx(), scene[index].img.cy())
 }
 
+function unselect()
+{
+    if (!(cso === 0)){
+        cso.img.selectize(false)
+        cso = 0
+    }
+}
+$("#tools").bind("click", unselect)
 
+
+var c = CreateCircle($('#canvas').innerWidth() / 2.0, $('#canvas').innerHeight() / 2.0, 0.0, 100)
+
+c.img.selectize(false).resize().draggable()
+c.img.on('click', function() {
+    c.img.selectize(true)
+    cso = c
+})
+c.img.on('dragmove', function(){
+    console.log('dragmove')
+    var r = c.img.attr('r')
+    var x = c.img.x()
+    var y = c.img.y() 
+    var angle = c.img.transform('rotation')
+    c.a = angle
+    //console.log(c.img.transform('rotation'))
+    c.cx = r;
+    c.cy = r;
+    c.x = x + r
+    c.y = y + r
+   // var old_dir_x = c.dir.x()
+   // var old_dir_y = c.dir.y()
+    //c.dir.remove()
+    //console.log(c.cx)
+    //c.dir = canvas.line(c.cx, c.cy, r*2,c.cy).stroke({width: 1})
+    //c.dir.x(old_dir_x)
+    //c.dir.y(old_dir_y)
+
+   // c.dir.attr({
+   //     'stroke': '#00f'
+  //  })
+    scene_update()
+})
+
+
+c.img.on("resizing", function ()
+{
+    var r = c.img.attr('r')
+    var x = c.img.x()
+    var y = c.img.y() 
+    var angle = c.img.transform('rotation')
+    c.a = angle
+    console.log('resizing')
+    c.cx = r;
+    c.cy = r;
+    c.x = x + r
+    c.y = y + r
+
+    var old_dir_x = c.dir.x()
+    var old_dir_y = c.dir.y()
+    
+    c.dir.remove()    
+    c.dir = canvas.line(r, r, r*2,r).stroke({width: 1})
+    c.dir.x(old_dir_x)
+    c.dir.y(old_dir_y)
+
+   c.dir.attr({
+       'stroke': '#00f'
+   })
+    scene_update()
+})
+scene.push(c)
+scene_update()

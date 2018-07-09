@@ -40,6 +40,10 @@ body{
     width: 100%;
 }
 
+.p0p{
+  padding: : 0px 0px 0px 0px;
+}
+
 #btnStart{
   position: relative;
   top: 10px;
