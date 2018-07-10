@@ -23,7 +23,7 @@ class Environment:
 		"""
 		node = Node(package=self.__pkg_name, node_type=self.__executable, args=self.name.get_full_name())
 		self.__proc_env = self.__owner.launch.launch(node)
-		rospy.loginfo("Launching env node: {}".format(self.name.get_full_name))
+		rospy.loginfo("Launching env node: {}".format(self.name.get_full_name()))
 
 	def stop(self):
 		self.__proc_env.stop()

@@ -16,17 +16,15 @@ world_create_reqs = []
 world_destroy_ids = []
 
 
-def create_world(world_req):
-	world_json = json_message_converter.convert_json_to_ros_message(world_req)
-	world_data = json.loads(world_json)
-	if world_data['id'] is int:
-		world_data['id'] = str(world_data['id'])
+def create_world(world_id):
+	# world_json = json_message_converter.convert_json_to_ros_message(world_req)
+	# world_data = json.loads(world_json)
 
-	if world_data['id'] in worlds:
+	if world_id.data in worlds:
 		return
-	rospy.loginfo('Creating world: {}'.format(world_data['id']))
+	rospy.loginfo('Creating world: {}'.format(world_id.data))
 
-	worlds[world_data['id']] = World(world_id=world_data['id'], world_init_prop=world_data['properties'])
+	worlds[world_id.data] = World(world_id=world_id.data, world_init_prop="stub")
 
 
 def destroy_world(world_id):

@@ -11,7 +11,7 @@ import pymunk
 
 
 def init_ros(env_name):
-	rospy.init_node(env_name, anonymous=False)
+	rospy.init_node('env', anonymous=True)
 
 	world_pub = rospy.Publisher(env_name + '/world_properties', String, queue_size=3)
 
