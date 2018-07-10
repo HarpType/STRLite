@@ -7,6 +7,7 @@ var state = STATE_STOP
 document.getElementById('btnStop').disabled = true
 function CreateCircle(sx,sy,angle, rad)
 {
+    rad = rad * 2
     var circle = {
         x: sx,
         y: sy,
@@ -153,8 +154,9 @@ function coordrequest()
                 console.log('Данные получены')
 
             data = JSON.parse(xhr.responseText)
-            //console.log(data)
+            console.log(data)
             scene_recreate()
+            //setTimeout(timer, 500)
 
         }
         else
@@ -234,11 +236,11 @@ function object_update(index)
     //console.log(robot.x(), " ", robot.y())
     
     scene[index].img.x(scene[index].x - scene[index].cx)
-    scene[index].img.y(scene[index].y - scene[index].cy)
+    scene[index].img.y(700-scene[index].y - scene[index].cy)
     scene[index].img.rotate(scene[index].a, scene[index].img.cx(), scene[index].img.cy())
 
     
     scene[index].dir.x(scene[index].x )
-    scene[index].dir.y(scene[index].y )
+    scene[index].dir.y(700-scene[index].y )
     scene[index].dir.rotate(scene[index].a, scene[index].img.cx(), scene[index].img.cy())
 }

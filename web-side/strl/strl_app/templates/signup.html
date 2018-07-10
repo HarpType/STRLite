@@ -1,12 +1,60 @@
-{% extends 'base.html' %}
-
-{% block title %}Sign Up{% endblock %}
+{% extends "basetest.html" %}
 
 {% block content %}
-  <h2>Sign up</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign up</button>
-  </form>
+<script type="text/javascript">activePage("sign_up_page")</script>
+<br>
+
+<div class="col-sm-offset-4">
+<div class="col-sm-5" >
+
+<center><h1>Create your personal account</h1></center>
+{% for field in form %}
+    {% if field.errors %}<div class="alert alert-danger">{{ field.errors }}</div>{% endif %}
+{% endfor %}
+<div class="well" style="background-color:lavender;">
+<form method="post" action="">
+  {% csrf_token %}
+<dl class="register">
+      <div class="row">
+          <div class="form-group">
+              <div class="col-xs-12">
+                  <label for="username">Name:</label>
+                  <input type="text" class="form-control" name="username" placeholder="Enter username" id="username">
+              </div>
+          </div>
+      </div>
+      <br>
+      <div class="row">
+          <div class="form-group">
+              <div class="col-xs-12">
+                  <label for="password1">Password:</label>
+                  <input type="password" class="form-control" name="password1" placeholder="Enter password" id="password1">
+              </div>
+          </div>
+      </div>
+      <br>
+      <div class="row">
+          <div class="form-group">
+              <div class="col-xs-12">
+                  <label for="password2">Repeat password:</label>
+                  <input type="password" class="form-control" name="password2" placeholder="Enter password again" id="password2">
+              </div>
+          </div>
+      </div>
+  <br>
+  <div class="control-group">
+        <div class="controls">
+            <input class="btn btn-primary btn-block" type="submit" value="Create an account">
+        </div>
+    </div>
+  <br>
+      <center>
+        If you already have an account, go to<br>
+        <a href="{% url 'login' %}"> Sign In</a>
+      </center>
+</form>
+
+</div>
+</div>
+</div>
 {% endblock %}

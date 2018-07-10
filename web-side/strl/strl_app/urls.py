@@ -9,10 +9,13 @@ urlpatterns = [
     # path('', views.home, name='home'),
     #!ниже можно удалить наверное одну строчку
     path('', include('django.contrib.auth.urls')),
-    path('', TemplateView.as_view(template_name='home.html'), name='home'),
-    path('editor/', TemplateView.as_view(template_name='editor.html'), name='editor'),
+    path('', views.home, name='home'),
+    path('editor/', views.editor, name='editor'),
     path('signup/', views.SignUp.as_view(), name='signup'),
     path('editor/properties', views.properties, name='properties'),
     path('editor/start', views.start, name='start'),
     path('editor/stop', views.stop, name='stop'),
+    path('testrequest/', views.testrequest, name='testrequest'),
+    path('editor/create', views.create, name='create')
 ] # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# TemplateView.as_view(template_name='home.html')

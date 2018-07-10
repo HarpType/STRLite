@@ -55,3 +55,13 @@ body{
   width: 100px;
   height: 35px;
 }
+
+.wrapper {
+     height : 100%;
+     width : 100%;
+     padding: 20px;
+}
+.content {
+    height : 100%;
+    width : 100%;
+}
