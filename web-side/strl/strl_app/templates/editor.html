@@ -1,52 +1,12 @@
-<!DOCTYPE html>
+{% extends "basetest.html" %}
 
-{% load staticfiles %}
+{% block content %}
 
-
-<html lang="ru">
-<head>
-  <title>STRLite</title>
-  <meta charset="utf-8">
-  
-  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
-  
-  <script src="{% static 'libs/dev/jquery.js' %}"></script>
-  <script src="{% static 'libs/dev/bootstrap.js' %}"></script>
-    <script src="{% static 'libs/dev/svg.js' %}"></script>
-    <!-- robotwebtools -->
-    <script type="text/javascript" src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+<!-- robotwebtools -->
+<script type="text/javascript" src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
 <script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
 
-  
-  <style>
-    
-  </style>
-</head>
-<body>
-
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>                        
-      </button>
-      <a class="navbar-brand" href="#">STRLite</a>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">Editor</a></li>
-
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+<script type="text/javascript">activePage("editor_page")</script>
 
 <div  class="h100p container text-center">
     <!-- <div class="row">
@@ -57,28 +17,26 @@
     </div> -->
   <div id="app-space" class=" row content ">
 
-    <div  class=" col-sm-2 text-left h100p">
-        <div class="panel panel-default">
-          <div class="panel-heading">Инструменты</div>
-          <div class="panel-body">
-            <button id="btnStart" type="button" class="btn btn-success w100p">Start</button>
-            <button id="btnStop" type="button" class="btn btn-danger w100p">Stop</button>
-          </div>
-        </div>
 
-    </div>
 
-    <div  class=" col-sm-10 text-left h100p">
+
+
+
+
+
+
+    <div  class=" col-sm-12 text-left h100p">
         <div id="canvas" class="img-thumbnail">
+          <button id="btnStart" type="button" class="btn btn-success w100p"><div class="glyphicon glyphicon-play"></div> Start</button>
+          <button id="btnStop" type="button" class="btn btn-danger w100p"><div class="glyphicon glyphicon-stop"></div> Stop</button>
         </div>
-      
+
+
     </div>
-    
+
+
+
   </div>
 </div>
 
-
-</body>
-    <script src="{% static 'strl_renderer/strl_renderer.js' %}"></script>
-    <script src="{% static 'ros-client/rosbridge.js' %}"></script>
-</html>
+{% endblock %}

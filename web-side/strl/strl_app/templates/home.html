@@ -1,15 +1,16 @@
 <!-- templates/home.html -->
-{% extends 'base.html' %}
-
-{% block title %}Home{% endblock %}
+{% extends 'basetest.html' %}
 
 {% block content %}
-{% if user.is_authenticated %}
-    Hi, {{ user.username }}!
-    <p><a href="{% url 'logout' %}">logout</a></p>
-    <a href="{% url 'editor' %}">editor</a>
-{% else %}
-    <p>You are not logged in</p>
-    <a href="{% url 'login' %}">login</a>
-{% endif %}
+<script type="text/javascript">activePage("home_page")</script>
+<br>
+<div class="col-sm-offset-4">
+<div class="col-sm-5" >
+    <center>
+        <h1>Hi, {{ user.username }}!</h1>
+        <h2>Welcome to STRLite!</h2>
+    </center>
+</div>
+</div>
 {% endblock %}
+

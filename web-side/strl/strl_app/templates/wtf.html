@@ -1,0 +1,118 @@
+{% extends 'basetest.html' %}
+
+{% block title %}Login{% endblock %}
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<h2>Login</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="control-group">
+        <div class="controls">
+            <input class="btn btn-primary" type="submit" value="Войти">
+        </div>
+    </div>
+
+</form>
+
+{% endblock %}
+
+<button type="submit">Login</button>
+
+<p><label for="username">Username:</label>
+    <input type="text" name="username" value="" id="username"></p>
+    <p><label for="password">Password:</label>
+    <input type="password" name="password" value="" id="password"></p>
+
+{% extends 'base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+  <h2>Sign up</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign up</button>
+  </form>
+{% endblock %}
+
+
+{% extends "base.html" %}
+
+{% block title %}Регистрация пользователя{% endblock %}
+
+{% block content %}
+  <h1>Регистрация пользователя</h1>
+  <form action="." method="post">
+    {% csrf_token %}
+    {% if form.error_dict %}
+      <p class="error">Пожалуйста исправьте нижеприведённые ошибки.</p>
+    {% endif %}
+
+    {% if form.username.errors %}
+      {{ form.username.html_error_list }}
+    {% endif %}
+    <label for="id_username">Логин:</label> {{ form.username }}
+
+    {% if form.password1.errors %}
+      {{ form.password1.html_error_list }}
+    {% endif %}
+    <label for="id_password1">Пароль:</label> {{ form.password1 }}
+
+    {% if form.password2.errors %}
+      {{ form.password2.html_error_list }}
+    {% endif %}
+    <label for="id_password2">Пароль (снова):</label> {{ form.password2 }}
+
+    <input type="submit" value="Зарегистрировать" />
+  </form>
+{% endblock %}
+
+
+{% extends "basetest.html" %}
+
+{% block content %}
+<script type="text/javascript">activePage("sign_up_page")</script>
+<br>
+
+<div class="col-sm-offset-4">
+<div class="col-sm-5" >
+
+<center><h2>Sign Up to STRLite</h2></center>
+
+<div class="well" style="background-color:lavender;">
+<form method="post" action="">
+  {% csrf_token %}
+<dl class="register">
+{% for field in form %}
+  <div class="row">
+          <div class="form-group">
+              <div class="col-xs-12">
+    {{ field.label_tag }}
+      {{ field }}
+
+    {% if field.help_text %}<!--<span class="help-block">{{ field.help_text }}</span>-->{% endif %}
+    {% if field.errors %}<div class="alert alert-danger">{{ field.errors }}</div>{% endif %}
+                 </div>
+          </div>
+      </div>
+{% endfor %}
+
+  <br>
+  <div class="control-group">
+        <div class="controls">
+            <input class="btn btn-primary btn-block" type="submit" value="Регистрация">
+        </div>
+    </div>
+</form>
+
+</div>
+</div>
+</div>
+{% endblock %}

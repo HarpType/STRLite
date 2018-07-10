@@ -1,3 +1,9 @@
+from django.conf import settings
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 
-# Create your models here.
+
+class World(models.Model):
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    init_info = JSONField()
+    # history = JSONField()

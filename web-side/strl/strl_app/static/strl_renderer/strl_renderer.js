@@ -16,7 +16,6 @@ function CreateCircle(sx,sy,angle, rad)
         cy: rad / 2.0,
         a: angle,
         img: canvas.circle(rad),
-
     }
     circle.img.attr({
         'fill': '#fff'
@@ -61,6 +60,23 @@ function CreateBox(sx,sy,angle, w, h)
     return box
 }
 
+function CreateBox(sx,sy,angle, w, h)
+{
+    var box = {
+        x: sx,
+        y: sy,
+        w: w,
+        h: h,
+        cx: w / 2.0,
+        cy: h / 2.0,
+        a: angle,
+        img: canvas.rect(w,h),
+
+var scene = []
+
+    return box
+}
+
 
 var scene = []
 var ros = new ROSLIB.Ros({
@@ -86,6 +102,7 @@ function initE()
 {
     document.getElementById('btnStop').disabled = false
     document.getElementById('btnStart').disabled = true
+<<<<<<< HEAD
 
     // Publishing a topic 
     var create_world = new ROSLIB.Topic({
