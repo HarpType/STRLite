@@ -7,7 +7,10 @@ import sys
 import random
 import json
 
+import pygame
+# from pygame.locals import *
 import pymunk
+from pymunk import pygame_util
 
 
 def init_ros(env_name):
@@ -15,7 +18,7 @@ def init_ros(env_name):
 
 	world_pub = rospy.Publisher(env_name + '/world_properties', String, queue_size=3)
 
-	rate = rospy.Rate(10)  # 10hz - 10 times per second
+	rate = rospy.Rate(50)  # 10hz - 10 times per second
 
 	return world_pub, rate
 
@@ -68,13 +71,20 @@ def publish_world(publisher, statics_l, balls):
 
 
 def pymunk_run(world_pub, rate):
+		# pygame.init()
+		# screen = pygame.display.set_mode((600, 600))
+		# pygame.display.set_caption("Joints. Just wait and the L will tip over")
+		clock = pygame.time.Clock()
+
 		space = pymunk.Space()
-		space.gravity = (0, -900)
-		dt = 1 / 10
+		space.gravity = (0.0, -900.0)
 
 		statics_l = add_static_l(space)
 
-		balls = list()
+		balls = []
+
+		# draw_options = pygame_util.DrawOptions(screen)
+
 		ticks_to_next_ball = 10
 
 		while not rospy.is_shutdown():
@@ -93,7 +103,12 @@ def pymunk_run(world_pub, rate):
 				space.remove(ball, ball.body)
 				balls.remove(ball)
 
-			space.step(dt)
+			space.step(1 / 50.0)
+
+			# screen.fill((255, 255, 255))
+			# space.debug_draw(draw_options)
+
+			# pygame.display.flip()
 
 			publish_world(publisher=world_pub, statics_l=statics_l, balls=balls)
 

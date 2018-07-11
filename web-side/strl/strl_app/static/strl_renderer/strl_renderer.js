@@ -16,6 +16,7 @@ function CreateCircle(sx,sy,angle, rad)
         cy: rad / 2.0,
         a: angle,
         img: canvas.circle(rad),
+
     }
     circle.img.attr({
         'fill': '#fff'
@@ -60,24 +61,6 @@ function CreateBox(sx,sy,angle, w, h)
     return box
 }
 
-function CreateBox(sx,sy,angle, w, h)
-{
-    var box = {
-        x: sx,
-        y: sy,
-        w: w,
-        h: h,
-        cx: w / 2.0,
-        cy: h / 2.0,
-        a: angle,
-        img: canvas.rect(w,h),
-
-var scene = []
-
-    return box
-}
-
-
 var scene = []
 var ros = new ROSLIB.Ros({
     url: 'ws://localhost:9090'
@@ -92,7 +75,9 @@ ros.on('error', function(error) {
 });
 
 
-var world_id = "1"
+var world_data = {}
+world_data.properties = []
+
 
 //$(document).bind('keypress',pressed);
 $('#btnStart').bind('click',initE)
@@ -102,7 +87,6 @@ function initE()
 {
     document.getElementById('btnStop').disabled = false
     document.getElementById('btnStart').disabled = true
-<<<<<<< HEAD
 
     // Publishing a topic 
     var create_world = new ROSLIB.Topic({
@@ -111,24 +95,26 @@ function initE()
         messageType: 'std_msgs/String'
     });
 
-    var world_id_message = new ROSLIB.Message({
-        world_id
-    });
+    var world_id_message = new ROSLIB.Message({data: 'pa'});
 
     create_world.publish(world_id_message)
 
     // Subscribing to a Topic
     var world_properties = new ROSLIB.Topic({
         ros: ros,
-        name: '/world/' + world_id + '/env/world_properties',
+        name: '/world/pa/env/world_properties',
         messageType: 'std_msgs/String'
     });
 
-    world_properties.subscribe(function(data) {
-        data = JSON.parse(xhr.responseText)
-        console.log(data)
-        scene_recreate()
+    world_properties.subscribe(function(msg) {
+        world_data = JSON.parse(msg.data)
+        // console.log(world_data)
+
+        // scene_recreate(world_data.properties)
     });
+
+     setTimeout(timer, 33)
+     state = STATE_RUN
 }
 
 function stopE()
@@ -136,58 +122,17 @@ function stopE()
 
 }
 
-var data
-
 
 function coordrequest()
 {
-    /*var xhr = new XMLHttpRequest()
-    xhr.open('GET', 'properties', false)
-    xhr.send()
-    if (xhr.status != 200){
-        alert(xhr.status + ': ' + xhr.statusText )
-    }
-    else{
-        var data = JSON.parse(xhr.responseText)
-        console.log(data)
-    }*/
-    var xhr = new XMLHttpRequest()
-    xhr.open('GET', 'properties', true)
-    xhr.addEventListener('readystatechange', function(){
-        if ((xhr.readyState==4)&&(xhr.status == 200)){
-            if (debug)
-                console.log('Данные получены')
-
-            data = JSON.parse(xhr.responseText)
-            console.log(data)
-            scene_recreate()
-            //setTimeout(timer, 500)
-
-        }
-        else
-        {
-
-           // console.log(xhr.readyState)
-            if (xhr.readyState==2){
-                if (debug)
-                    console.log("Запрос отправлен")
-
-            }
-            if (xhr.readyState==3){
-                if (debug)
-                    console.log("Обработка на сервере")
-            }
-
-        }
-
-    })
-    xhr.send()
+    
 }
 
 function timer()
 {
     if (state == STATE_RUN){
-        coordrequest()
+
+        scene_recreate(world_data.properties)
         setTimeout(timer, 33)
     }
 
@@ -228,7 +173,7 @@ function scene_update()
     }
 }
 
-function scene_recreate()
+function scene_recreate(data)
 {
     scene_clear()
     scene_create(data)
