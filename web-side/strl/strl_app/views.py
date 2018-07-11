@@ -20,39 +20,6 @@ from threading import Thread
 from relation import files, bridge
 
 
-# home view is just from template in urls
-
-def home(request):
-    if request.user.is_authenticated:
-        return render(request, 'home.html')
-    else:
-        return HttpResponseRedirect('/login/?next=%s' % request.path)
-
-def editor(request):
-    if request.user.is_authenticated:
-        return render(request, 'editor.html')
-    else:
-        return HttpResponseRedirect('/login/?next=%s' % request.path)
-
-
-"""def register(request):
-    form = UserCreationForm()
-
-    if request.method == 'POST':
-        data = request.POST.copy()
-        errors = form.get_validation_errors(data)
-        if not errors:
-            new_user = form.save(data)
-            return HttpResponseRedirect("/books/")
-    else:
-        data, errors = {}, {}
-
-    return render_to_response("registration/register.html", {
-        'form': forms.FormWrapper(form, data, errors)
-    })
-"""
-
-
 @csrf_exempt
 def testrequest(request):
     if request.method == 'POST':
@@ -62,6 +29,20 @@ def testrequest(request):
         print(data)
         # print(post_text)
         return HttpResponse("GEEEHELEOE")
+
+
+def home(request):
+    if request.user.is_authenticated:
+        return render(request, 'home.html')
+    else:
+        return HttpResponseRedirect('/login/?next=%s' % request.path)
+
+
+def editor(request):
+    if request.user.is_authenticated:
+        return render(request, 'editor.html')
+    else:
+        return HttpResponseRedirect('/login/?next=%s' % request.path)
 
 
 def create(request):
@@ -75,31 +56,6 @@ def create(request):
             return HttpResponse(str(w.id))
         else:
             return HttpResponse("Nothing to create")
-    else:
-        return HttpResponseRedirect('/login/?next=%s' % request.path)
-
-
-def stop(request):
-    if request.user.is_authenticated:
-        # stop reading thread
-        bridge.stop_bridge = True
-        # bridge.proc.stdout.write('Stop\n')
-        # stop gravity.py
-        bridge.proc.terminate()
-        return HttpResponse('')
-    else:
-        return HttpResponseRedirect('/login/')
-
-
-def properties(request):
-    if request.user.is_authenticated:
-        try:
-            str_data = bridge.q.get(timeout=1)
-        except Empty:
-            return HttpResponse('[]')
-        else:
-            data_to_send = ast.literal_eval(str_data[:-1])
-            return HttpResponse(json.dumps(data_to_send))
     else:
         return HttpResponseRedirect('/login/')
 
@@ -133,7 +89,52 @@ def start(request):
         return HttpResponseRedirect('/login/')
 
 
+def stop(request):
+    if request.user.is_authenticated:
+        # stop reading thread
+        bridge.stop_bridge = True
+        # bridge.proc.stdout.write('Stop\n')
+        # stop gravity.py
+        bridge.proc.terminate()
+        return HttpResponse('')
+    else:
+        return HttpResponseRedirect('/login/')
+
+
+def properties(request):
+    if request.user.is_authenticated:
+        try:
+            str_data = bridge.q.get(timeout=1)
+        except Empty:
+            return HttpResponse('[]')
+        else:
+            data_to_send = ast.literal_eval(str_data[:-1])
+            return HttpResponse(json.dumps(data_to_send))
+    else:
+        return HttpResponseRedirect('/login/')
+
+
 class SignUp(generic.CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
+
+
+"""def register(request):
+    form = UserCreationForm()
+
+    if request.method == 'POST':
+        data = request.POST.copy()
+        errors = form.get_validation_errors(data)
+        if not errors:
+            new_user = form.save(data)
+            return HttpResponseRedirect("/books/")
+    else:
+        data, errors = {}, {}
+
+    return render_to_response("registration/register.html", {
+        'form': forms.FormWrapper(form, data, errors)
+    })
+"""
+
+

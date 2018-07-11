@@ -6,8 +6,6 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    # path('', views.home, name='home'),
-    #!ниже можно удалить наверное одну строчку
     path('', include('django.contrib.auth.urls')),
     path('', views.home, name='home'),
     path('editor/', views.editor, name='editor'),
