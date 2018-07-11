@@ -1,81 +1,52 @@
+function setup(){
+    var canvas = createCanvas(document.getElementById('canvas-container').clientWidth-5,
+                                document.getElementById('canvas-container').clientHeight-5)
+    canvas.parent('canvas-container')
+    noLoop()
+}
+function draw(){
+    background(color(255, 255, 255))
+    translate(0,0)
+    for (var i = 0; i < scene.length; i++){
+        var obj = scene[i]
+        obj.a = obj.a * (1.0/180.0 * 3.14159 ) // to radian
+        obj.a = - obj.a // to ?
+        //transform apply
+        translate(obj.x, obj.y)
+        rotate(obj.a)
+        if (obj.id == 1){
+            fill(color(255,255,255,100))
+            stroke(color(0,255,0,255))
+            ellipse(0, 0, obj.r*2, obj.r*2)
+            stroke(color(0,0,255,255))
+            line(0, 0, obj.r, 0)
+        }
+        if (obj.id == 2){
+            fill(color(255,255,255,100))
+            stroke(color(0,255,0,255))
+            rect(-obj.w / 2.0, -obj.h / 2.0, obj.w , obj.h )
+            stroke(color(0,0,255,255))
+            line(0, 0, obj.w / 2.0, 0)
+        }
+        //transform reset
+        rotate(-obj.a)
+        translate(-obj.x, -obj.y)
+    }
+
+}
+
+
+var debug = false
+document.getElementById('btnStop').disabled = true
 const STATE_STOP = 0
 const STATE_RUN = 1
-var canvas = SVG('canvas').size('100%', '100%') //кансвас на котором будем создавать объекты
-var debug = false
-var state = STATE_STOP
-var cso = 0 //Current Selected Object
-//var robot = canvas.image("strl_app/media/pictures/turtlebot100px.png", 50, 50)
-document.getElementById('btnStop').disabled = true
-function CreateCircle(sx,sy,angle, rad)
-{
-    var circle = {
-        type: 'circle',
-        x: sx,
-        y: sy,
-        r: rad,
-        cx: rad,
-        cy: rad,
-        a: angle,
-        img: canvas.circle(2*rad),
+var state = STATE_RUN
 
-    }   
-    circle.img.attr({
-        'fill': '#fff'
-    })
-    circle.dir = canvas.line(circle.cx, circle.cy,  rad*2, circle.cy).stroke({width: 1})
-    circle.dir.attr({
-        'stroke': '#00f'
-    })
-    circle.img.stroke({
-        width: 1,
-        color: '#0f0'
-    })
-
-    return circle
-}
-
-function CreateBox(sx,sy,angle, w, h)
-{
-    var box = {
-        type: 'box',
-        x: sx,
-        y: sy,
-        w: w,
-        h: h,
-        cx: w / 2.0,
-        cy: h / 2.0,
-        a: angle,
-        img: canvas.rect(w,h),
-
-    }   
-    box.img.attr({
-        'fill': '#fff'
-    })
-    box.dir = canvas.line(box.cx, box.cy,  box.w, box.cy).stroke({width: 1})
-    box.dir.attr({
-        'stroke': '#00f'
-    })
-    box.img.stroke({
-        width: 1,
-        color: '#0f0'
-    })
-
-    return box
-}
 
 
 var scene = []
 
-function btn_create_circle()
-{
-    CreateCircle($('#canvas').width() / 2.0, $('#canvas').height() / 2.0, )
-}
 
-
-
-//$(document).bind('keypress',pressed);
-$('#btnStart').bind('click',initE)
-$('#btnStop').bind('click',stopE)
 
 function initE()
 {
@@ -137,23 +108,8 @@ function stopE()
         
 }
 
-var data
-
-
 function coordrequest()
 {
-    /*var xhr = new XMLHttpRequest()
-    xhr.open('GET', 'properties', false)
-    xhr.send()
-    if (xhr.status != 200){
-        alert(xhr.status + ': ' + xhr.statusText )
-        
-    }
-    else{
-        var data = JSON.parse(xhr.responseText)
-        console.log(data)
-        
-    }*/
     var xhr = new XMLHttpRequest()
     xhr.open('GET', 'properties', true)
     xhr.addEventListener('readystatechange', function(){
@@ -161,9 +117,10 @@ function coordrequest()
             if (debug)
                 console.log('Данные получены')
             
-            data = JSON.parse(xhr.responseText)
-            //console.log(data)
-            scene_recreate()
+            scene = JSON.parse(xhr.responseText)
+            console.log(scene)
+            redraw()
+
             
         }   
         else
@@ -195,132 +152,5 @@ function timer()
 
 }
 
-function scene_clear()
-{
-    for(var i = 0; i < scene.length; i++){
-        scene[i].img.remove()
-        scene[i].dir.remove()
-        delete scene[i]
-    }
-    scene = []
-}
-
-function scene_create(data)
-{
-     for (var i = 0; i < data.length; i++){
-        var info = data[i]
-        if (info.id == 1){
-            scene[i] = CreateCircle(info.x, info.y, info.a, info.r) 
-        }
-        if (info.id == 2){
-            scene[i] = CreateBox(info.x, info.y, info.a, info.w, info.h) 
-            
-        }
-
-        
-        //console.log(robots[i])              
-        scene_update(i)
-    }
-}
-
-function scene_update()
-{
-    for (var i = 0; i < scene.length; i++){
-        object_update(i)
-    }
-}
-
-function scene_recreate()
-{
-    scene_clear()
-    scene_create(data)
-    scene_update()
-
-}
-
-function object_update(index)
-{    
-    //console.log(robot.x(), " ", robot.y())
-    
-    scene[index].img.x(scene[index].x - scene[index].cx)
-    scene[index].img.y(scene[index].y - scene[index].cy)
-    scene[index].img.rotate(scene[index].a, scene[index].img.cx(), scene[index].img.cy())
-
-    
-    scene[index].dir.x(scene[index].x )
-    scene[index].dir.y(scene[index].y )
-    scene[index].dir.rotate(scene[index].a, scene[index].img.cx(), scene[index].img.cy())
-}
-
-function unselect()
-{
-    if (!(cso === 0)){
-        cso.img.selectize(false)
-        cso = 0
-    }
-}
-$("#tools").bind("click", unselect)
-
-
-var c = CreateCircle($('#canvas').innerWidth() / 2.0, $('#canvas').innerHeight() / 2.0, 0.0, 100)
-
-c.img.selectize(false).resize().draggable()
-c.img.on('click', function() {
-    c.img.selectize(true)
-    cso = c
-})
-c.img.on('dragmove', function(){
-    console.log('dragmove')
-    var r = c.img.attr('r')
-    var x = c.img.x()
-    var y = c.img.y() 
-    var angle = c.img.transform('rotation')
-    c.a = angle
-    //console.log(c.img.transform('rotation'))
-    c.cx = r;
-    c.cy = r;
-    c.x = x + r
-    c.y = y + r
-   // var old_dir_x = c.dir.x()
-   // var old_dir_y = c.dir.y()
-    //c.dir.remove()
-    //console.log(c.cx)
-    //c.dir = canvas.line(c.cx, c.cy, r*2,c.cy).stroke({width: 1})
-    //c.dir.x(old_dir_x)
-    //c.dir.y(old_dir_y)
-
-   // c.dir.attr({
-   //     'stroke': '#00f'
-  //  })
-    scene_update()
-})
-
-
-c.img.on("resizing", function ()
-{
-    var r = c.img.attr('r')
-    var x = c.img.x()
-    var y = c.img.y() 
-    var angle = c.img.transform('rotation')
-    c.a = angle
-    console.log('resizing')
-    c.cx = r;
-    c.cy = r;
-    c.x = x + r
-    c.y = y + r
-
-    var old_dir_x = c.dir.x()
-    var old_dir_y = c.dir.y()
-    
-    c.dir.remove()    
-    c.dir = canvas.line(r, r, r*2,r).stroke({width: 1})
-    c.dir.x(old_dir_x)
-    c.dir.y(old_dir_y)
-
-   c.dir.attr({
-       'stroke': '#00f'
-   })
-    scene_update()
-})
-scene.push(c)
-scene_update()
+$('#btnStart').bind('click',timer)
+$('#btnStop').bind('click',stopE)
