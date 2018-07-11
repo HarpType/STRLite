@@ -1,60 +1,78 @@
-{% extends "basetest.html" %}
+{% extends "base.html" %}
 
 {% block content %}
+
 <script type="text/javascript">activePage("sign_up_page")</script>
 <br>
 
 <div class="col-sm-offset-4">
-<div class="col-sm-5" >
+    <div class="col-sm-5" >
 
-<center><h1>Create your personal account</h1></center>
-{% for field in form %}
-    {% if field.errors %}<div class="alert alert-danger">{{ field.errors }}</div>{% endif %}
-{% endfor %}
-<div class="well" style="background-color:lavender;">
-<form method="post" action="">
-  {% csrf_token %}
-<dl class="register">
-      <div class="row">
-          <div class="form-group">
-              <div class="col-xs-12">
-                  <label for="username">Name:</label>
-                  <input type="text" class="form-control" name="username" placeholder="Enter username" id="username">
+        <center><h1>Create your personal account</h1></center>
+
+            {% if form.errors %}<div class="alert alert-danger">Something has gone wrong. Please check the information
+            you have entered.</div>{% endif %}
+
+            <!--{% for field in form %}
+                {% if field.errors %}<div class="alert alert-danger">{{ field.errors }}</div>{% endif %}
+
+            {% endfor %}-->
+
+        <div class="well" style="background-color:lavender;">
+        <form method="post" action="">
+          {% csrf_token %}
+        <dl class="register">
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-xs-12">
+                          <label for="username">Name:</label>
+                          <input type="text" class="form-control" name="username" placeholder="Enter username" id="username">
+                      </div>
+                  </div>
               </div>
-          </div>
-      </div>
-      <br>
-      <div class="row">
-          <div class="form-group">
-              <div class="col-xs-12">
-                  <label for="password1">Password:</label>
-                  <input type="password" class="form-control" name="password1" placeholder="Enter password" id="password1">
+              <br>
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-xs-12">
+                          <label for="password1">Password:</label>
+                          <input type="password" class="form-control" name="password1" placeholder="Enter password" id="password1">
+                      </div>
+                  </div>
               </div>
-          </div>
-      </div>
-      <br>
-      <div class="row">
-          <div class="form-group">
-              <div class="col-xs-12">
-                  <label for="password2">Repeat password:</label>
-                  <input type="password" class="form-control" name="password2" placeholder="Enter password again" id="password2">
+              <br>
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-xs-12">
+                          <label for="password2">Repeat password:</label>
+                          <input type="password" class="form-control" name="password2" placeholder="Enter password again" id="password2">
+                      </div>
+                  </div>
               </div>
-          </div>
-      </div>
-  <br>
-  <div class="control-group">
-        <div class="controls">
-            <input class="btn btn-primary btn-block" type="submit" value="Create an account">
+          <br>
+             {% if form.errors %}
+                <span class="help-block">
+                    For username: 150 characters or fewer. Letters, digits and @/./+/-/_ only. <br>
+                    For password: Your password can't be too similar to your other personal information.
+                    Your password must contain at least 8 characters.
+                    Enter the same password as before, for verification.<br>
+                </span>
+            {% endif %}
+          <div class="control-group">
+                <div class="controls">
+                    <input class="btn btn-primary btn-block" type="submit" value="Create an account">
+                </div>
+            </div>
+          <br>
+              <center>
+                If you already have an account, go to<br>
+                <a href="{% url 'login' %}"> Sign In</a>
+              </center>
+        </dl>
+        </form>
+
         </div>
     </div>
-  <br>
-      <center>
-        If you already have an account, go to<br>
-        <a href="{% url 'login' %}"> Sign In</a>
-      </center>
-</form>
+</div>
 
-</div>
-</div>
-</div>
 {% endblock %}
+

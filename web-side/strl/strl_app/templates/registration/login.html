@@ -1,57 +1,57 @@
 <!-- templates/registration/login.html -->
 
-{% extends "basetest.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 <script type="text/javascript">activePage("sign_in_page")</script>
 <br>
 
 <div class="col-sm-offset-4">
-<div class="col-sm-5" >
-<center><h1>Sign In to STRLite</h1></center>
-{% if form.errors %}
-    <div class="alert alert-danger">
-        Incorrect username or password!
-    </div>
-{% endif %}
+    <div class="col-sm-5" >
+        <center><h1>Sign In to STRLite</h1></center>
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                Incorrect username or password!
+            </div>
+        {% endif %}
 
-<div class="well" style="background-color:lavender;">
-  <form action='.' method='post'>
-      {% csrf_token %}
+        <div class="well" style="background-color:lavender;">
+          <form action='.' method='post'>
+              {% csrf_token %}
 
-      <div class="row">
-          <div class="form-group">
-              <div class="col-xs-12">
-                  <label for="username">Name:</label>
-                  <input type="text" class="form-control" name="username" placeholder="Enter username" id="username">
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-xs-12">
+                          <label for="username">Name:</label>
+                          <input type="text" class="form-control" name="username" placeholder="Enter username" id="username">
+                      </div>
+                  </div>
               </div>
-          </div>
-      </div>
-      <br>
-      <div class="row">
-          <div class="form-group">
-              <div class="col-xs-12">
-                  <label for="password">Password:</label>
-                  <input type="password" class="form-control" name="password" placeholder="Enter password" id="password">
+              <br>
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-xs-12">
+                          <label for="password">Password:</label>
+                          <input type="password" class="form-control" name="password" placeholder="Enter password" id="password">
+                      </div>
+                  </div>
               </div>
-          </div>
-      </div>
-      <br>
-    <div class="control-group">
-        <div class="controls">
-            <input class="btn btn-primary btn-block" type="submit" value="Войти">
+              <br>
+            <div class="control-group">
+                <div class="controls">
+                    <input class="btn btn-primary btn-block" type="submit" value="Sign In">
+                </div>
+            </div>
+              <br>
+              <center>
+                   If you don't have an account, go to<br>
+                  <a href="{% url 'signup' %}">Sign Up </a>
+              </center>
+            <!--<input type="submit" value="login" >
+            <input type="hidden" name="next" value="{{ next|escape }}" />-->
+          </form>
         </div>
     </div>
-      <br>
-      <center>
-           If you don't have an account, go to<br>
-          <a href="{% url 'signup' %}">Sign Up </a>
-      </center>
-    <!--<input type="submit" value="login" >
-    <input type="hidden" name="next" value="{{ next|escape }}" />-->
-  </form>
-</div>
-</div>
 </div>
 
 {% endblock %}
