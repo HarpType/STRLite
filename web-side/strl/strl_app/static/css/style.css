@@ -40,28 +40,22 @@ body{
     width: 100%;
 }
 
+.p0p{
+  padding: : 0px 0px 0px 0px;
+}
+
 #btnStart{
-  position: relative;
-  top: 10px;
-  left: 10px;
+  margin: 5px;
   width: 100px;
   height: 35px;
 }
 
 #btnStop{
-  position: relative;
-  top: 10px;
-  left: 10px;
+  margin: 5px;
   width: 100px;
   height: 35px;
 }
 
-.wrapper {
-     height : 100%;
-     width : 100%;
-     padding: 20px;
-}
-.content {
-    height : 100%;
-    width : 100%;
+#editor_container{
+    margin: 15px;
 }

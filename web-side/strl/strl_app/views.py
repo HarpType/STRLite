@@ -17,7 +17,7 @@ from threading import Thread
 
 
 #for communication between server and gravity
-from relation import files, bridge
+# from relation import files, bridge
 
 
 @csrf_exempt

@@ -8,7 +8,6 @@ import random
 import json
 
 import pygame
-# from pygame.locals import *
 import pymunk
 from pymunk import pygame_util
 
@@ -33,6 +32,7 @@ def add_ball(space):
 	x = random.randint(160, 380)
 	body.position = (x, 550)
 	shape = pymunk.Circle(body, radius)
+	shape.friction = 0.5
 
 	space.add(body, shape)
 
@@ -47,9 +47,9 @@ def add_static_l(space):
 	l2 = pymunk.Segment(body, (-150, 0), (-150, 50), 5)
 	l3 = pymunk.Segment(body, (150, 0), (150, 50), 5)
 
-	d_l1 = {'x': l1.body.position.x, 'y': l1.body.position.y, 'id': 2, 'w': 300, 'h': 5}
-	d_l2 = {'x': l2.body.position.x - 150, 'y': l2.body.position.y, 'id': 2, 'w': 5, 'h': 50}
-	d_l3 = {'x': l3.body.position.x + 150, 'y': l3.body.position.y, 'id': 2, 'w': 5, 'h': 50}
+	d_l1 = {'x': l1.body.position.x, 'y': l1.body.position.y, 'id': 2, 'w': 300, 'h': 5, 'a': 0}
+	d_l2 = {'x': l2.body.position.x - 150, 'y': l2.body.position.y, 'id': 2, 'w': 5, 'h': 50, 'a': 0}
+	d_l3 = {'x': l3.body.position.x + 150, 'y': l3.body.position.y, 'id': 2, 'w': 5, 'h': 50, 'a': 0}
 
 	space.add(l1, l2, l3)
 
@@ -60,7 +60,7 @@ def publish_world(publisher, statics_l, balls):
 	world_list = []
 
 	for ball in balls:
-		ball_dir = {'x': ball.body.position.x, 'y': ball.body.position.y, 'r': ball.radius, 'id': 1, 'a': 45}
+		ball_dir = {'x': ball.body.position.x, 'y': ball.body.position.y, 'r': ball.radius, 'id': 1, 'a': ball.body.angle}
 		world_list.append(ball_dir)
 
 	world_list.extend(statics_l)

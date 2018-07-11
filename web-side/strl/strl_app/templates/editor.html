@@ -1,28 +1,59 @@
 {% extends "base.html" %}
-
+{% load staticfiles %}
 {% block content %}
 <script type="text/javascript">activePage("editor_page")</script>
+ <script src="{% static 'libs/dev/p5.js' %}"></script>
 
-<div  class="h100p container text-center">
+<div id="editor_container" class="h100p container-fluid text-center">
     <!-- <div class="row">
         <div class="col-sm-4 "></div>
         <div class="col-sm-2 "><button id="btnStart" type="button" class="btn btn-success w100p">Start</button></div>
-        <div class="col-sm-2 "><button id="btnStop" type="button" class="btn btn-danger w100p">Stop</button></div>
+        <div class="col-sm-2 "><button id="btnStop" type="button" class="btn btn-danger w100p">Stop</button></div>        
         <div class="col-sm-4 "></div>
     </div> -->
   <div id="app-space" class=" row content ">
-    <div  class=" col-sm-12 text-left h100p">
-        <div id="canvas" class="img-thumbnail">
-          <button id="btnStart" type="button" class="btn btn-success w100p"><div class="glyphicon glyphicon-play"></div> Start</button>
-          <button id="btnStop" type="button" class="btn btn-danger w100p"><div class="glyphicon glyphicon-stop"></div> Stop</button>
-        </div>
 
+
+          
+            
+          
+        
+      
+    
+   
+    <div id="canvas-container" class=" col-sm-10 text-left h100p">
+      <button id="btnStart" type="button" class="btn btn-success w100p"><div class="glyphicon glyphicon-play"></div> Start</button>
+        <button id="btnStop" type="button" class="btn btn-danger w100p"><div class="glyphicon glyphicon-stop"></div> Stop</button>
+
+
+
+      
+    </div>
+
+    <div  class=" col-sm-2  panel-group text-left h100p">
+      <div id="tools" class="panel  panel-primary h100p">
+        <div class="panel-heading">
+          Создать
+        </div>
+        <div class="panel-body ">
+          <div class="vertical-button-group">
+            <button id="btnCreateCircle" type="button" class="btn btn-default w100p">
+              <img src="https://image.flaticon.com/icons/svg/25/25477.svg" width="32px" height="32px"> </button>
+            <button id="btnCreateBox" type="button" class="btn btn-default w100p">
+            <img src="https://image.flaticon.com/icons/svg/61/61087.svg" width="32px" height="32px">
+            </button>
+            
+          </div>
+          
+        </div>
+      </div>
 
     </div>
 
 
-
+    
   </div>
 </div>
 
+<script src="{% static 'strl_renderer/strl_renderer.js' %}"></script>
 {% endblock %}

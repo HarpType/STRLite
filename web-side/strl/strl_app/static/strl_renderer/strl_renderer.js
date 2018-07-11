@@ -1,67 +1,53 @@
 const STATE_STOP = 0
 const STATE_RUN = 1
-var canvas = SVG('canvas').size('100%', '100%') //кансвас на котором будем создавать объекты
+
 var debug = false
 var state = STATE_STOP
 //var robot = canvas.image("strl_app/media/pictures/turtlebot100px.png", 50, 50)
 document.getElementById('btnStop').disabled = true
-function CreateCircle(sx,sy,angle, rad)
-{
-    rad = rad * 2
-    var circle = {
-        x: sx,
-        y: sy,
-        r: rad,
-        cx: rad / 2.0,
-        cy: rad / 2.0,
-        a: angle,
-        img: canvas.circle(rad),
 
-    }
-    circle.img.attr({
-        'fill': '#fff'
-    })
-    circle.dir = canvas.line(circle.cx, circle.cy,  rad, circle.cy).stroke({width: 1})
-    circle.dir.attr({
-        'stroke': '#00f'
-    })
-    circle.img.stroke({
-        width: 1,
-        color: '#0f0'
-    })
-
-    return circle
-}
-
-function CreateBox(sx,sy,angle, w, h)
-{
-    var box = {
-        x: sx,
-        y: sy,
-        w: w,
-        h: h,
-        cx: w / 2.0,
-        cy: h / 2.0,
-        a: angle,
-        img: canvas.rect(w,h),
-
-    }
-    box.img.attr({
-        'fill': '#fff'
-    })
-    box.dir = canvas.line(box.cx, box.cy,  box.w, box.cy).stroke({width: 1})
-    box.dir.attr({
-        'stroke': '#00f'
-    })
-    box.img.stroke({
-        width: 1,
-        color: '#0f0'
-    })
-
-    return box
-}
 
 var scene = []
+
+function setup(){
+    var canvas = createCanvas(document.getElementById('canvas-container').clientWidth-5,
+                                document.getElementById('canvas-container').clientHeight-5)
+    canvas.parent('canvas-container')
+    noLoop()
+}
+function draw(){
+    background(color(255, 255, 255))
+    translate(0,0)
+    for (var i = 0; i < scene.length; i++){
+        var obj = scene[i]
+        obj.a = - obj.a // to ?
+        
+        //transform apply
+        translate(obj.x, 600-obj.y)
+        rotate(obj.a)
+        if (obj.id == 1){
+            fill(color(255,255,255,100))
+            stroke(color(0,255,0,255))
+            ellipse(0, 0, obj.r*2, obj.r*2)
+            stroke(color(0,0,255,255))
+            line(0, 0, obj.r, 0)
+        }
+        if (obj.id == 2){
+            fill(color(255,255,255,100))
+            stroke(color(0,255,0,255))
+            obj.h = obj.h * 2
+            rect(-obj.w / 2.0, -obj.h / 2.0, obj.w , obj.h )
+            stroke(color(0,0,255,255))
+            line(0, 0, obj.w / 2.0, 0)
+        }
+        //transform reset
+        rotate(-obj.a)
+        translate(-obj.x, -(600-obj.y))
+    }
+
+}
+
+
 var ros = new ROSLIB.Ros({
     url: 'ws://localhost:9090'
 });
@@ -75,8 +61,6 @@ ros.on('error', function(error) {
 });
 
 
-var world_data = {}
-world_data.properties = []
 
 
 //$(document).bind('keypress',pressed);
@@ -95,25 +79,21 @@ function initE()
         messageType: 'std_msgs/String'
     });
 
-    var world_id_message = new ROSLIB.Message({data: 'pa'});
+    var world_id_message = new ROSLIB.Message({data: '1'});
 
     create_world.publish(world_id_message)
 
     // Subscribing to a Topic
     var world_properties = new ROSLIB.Topic({
         ros: ros,
-        name: '/world/pa/env/world_properties',
+        name: '/world/1/env/world_properties',
         messageType: 'std_msgs/String'
     });
 
     world_properties.subscribe(function(msg) {
-        world_data = JSON.parse(msg.data)
-        // console.log(world_data)
-
-        // scene_recreate(world_data.properties)
+        scene = JSON.parse(msg.data).properties
+        redraw()
     });
-
-     setTimeout(timer, 33)
      state = STATE_RUN
 }
 
@@ -122,75 +102,3 @@ function stopE()
 
 }
 
-
-function coordrequest()
-{
-    
-}
-
-function timer()
-{
-    if (state == STATE_RUN){
-
-        scene_recreate(world_data.properties)
-        setTimeout(timer, 33)
-    }
-
-}
-
-function scene_clear()
-{
-    for(var i = 0; i < scene.length; i++){
-        scene[i].img.remove()
-        scene[i].dir.remove()
-        delete scene[i]
-    }
-    scene = []
-}
-
-function scene_create(data)
-{
-     for (var i = 0; i < data.length; i++){
-        var info = data[i]
-        if (info.id == 1){
-            scene[i] = CreateCircle(info.x, info.y, info.a, info.r) 
-        }
-        if (info.id == 2){
-            scene[i] = CreateBox(info.x, info.y, info.a, info.w, info.h) 
-            
-        }
-
-        
-        //console.log(robots[i])              
-        scene_update(i)
-    }
-}
-
-function scene_update()
-{
-    for (var i = 0; i < scene.length; i++){
-        object_update(i)
-    }
-}
-
-function scene_recreate(data)
-{
-    scene_clear()
-    scene_create(data)
-    scene_update()
-
-}
-
-function object_update(index)
-{    
-    //console.log(robot.x(), " ", robot.y())
-    
-    scene[index].img.x(scene[index].x - scene[index].cx)
-    scene[index].img.y(700-scene[index].y - scene[index].cy)
-    scene[index].img.rotate(scene[index].a, scene[index].img.cx(), scene[index].img.cy())
-
-    
-    scene[index].dir.x(scene[index].x )
-    scene[index].dir.y(700-scene[index].y )
-    scene[index].dir.rotate(scene[index].a, scene[index].img.cx(), scene[index].img.cy())
-}
