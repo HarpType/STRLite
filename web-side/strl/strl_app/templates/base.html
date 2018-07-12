@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
     <script src="{% static 'libs/dev/jquery.js' %}"></script>
     <script src="{% static 'libs/dev/bootstrap.js' %}"></script>
-    <script src="{%static 'css/nav.js'%}"></script>
+    <script src="{%static 'js/nav.js'%}"></script>
 
     <!-- robotwebtools -->
     <script type="text/javascript" src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
@@ -33,12 +33,13 @@
           <ul class="nav navbar-nav">
             {% if user.is_authenticated %}
             <li id="home_page"><a href="{% url 'home' %}">Home</a></li>
+            <li id="worlds_page"><a href="{% url 'worlds' %}">Worlds</a></li>
             <li id="editor_page"><a href="{% url 'editor' %}">Editor</a></li>
             {% endif %}
           </ul>
           <ul class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}
-                <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a></li>
+                <li><a href="{% url 'worlds' %}"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a></li>
                 <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Sign Out</a></li>
             {% else %}
                 <li id="sign_in_page"><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> Sign In</a></li>
