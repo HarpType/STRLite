@@ -22,4 +22,4 @@ class World:
 		self.launch.start()
 
 	def destroy(self):
-		pass
+		self.__env.stop()

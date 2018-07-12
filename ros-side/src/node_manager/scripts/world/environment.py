@@ -19,7 +19,7 @@ class Environment:
 
 	def launch(self):
 		"""
-		This method sets up information about the env node and runs it
+		Sets up information about the env node and runs it
 		"""
 		node = Node(package=self.__pkg_name, node_type=self.__executable, args=self.name.get_full_name())
 		self.__proc_env = self.__owner.launch.launch(node)
