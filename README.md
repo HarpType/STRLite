@@ -39,7 +39,7 @@
 
 
 #### Installing Rosbridge
-1. Install rosbridge. The following command is used:
+1. Install rosbridge. Use the following command:
 
     <code> $ sudo apt-get install ros-kinetic-rosbridge-server </code>
 
@@ -49,7 +49,7 @@
 
     <code> $ sudo -u postgres psql postgres </code>
 
-3. Create and set up a new user for the database.
+3. Create and set up a new user.
 
     `create user user_name with password 'password';`
 
