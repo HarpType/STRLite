@@ -1,176 +1,133 @@
-var canvas = SVG('canvas').size('100%', '100%')
-//var robot = canvas.image("strl_app/media/pictures/turtlebot100px.png", 50, 50)
-function CreateRobot(sx,sy,angle, rad)
-{
-    var robot = {
-        x: sx,
-        y: sy,
-        r: rad,
-        cx: rad / 2.0,
-        cy: rad / 2.0,
-        a: angle,
-        img: canvas.circle(rad),
-    }
+const STATE_STOP = 0
+const STATE_RUN = 1
 
-    return robot
+var debug = false
+var state = STATE_STOP
+//var robot = canvas.image("strl_app/media/pictures/turtlebot100px.png", 50, 50)
+document.getElementById('btnStop').disabled = true
+
+
+var scene = []
+
+function setup(){
+	var canvas = createCanvas(document.getElementById('canvas-container').clientWidth-5,
+								document.getElementById('canvas-container').clientHeight-5)
+	canvas.parent('canvas-container')
+	noLoop()
+}
+function draw(){
+	background(color(255, 255, 255))
+	translate(0,0)
+	for (var i = 0; i < scene.length; i++){
+		var obj = scene[i]
+		obj.a = - obj.a // to ?
+		
+		//transform apply
+		translate(obj.x, 600-obj.y)
+		rotate(obj.a)
+		if (obj.id == 1){
+			fill(color(255,255,255,100))
+			stroke(color(0,255,0,255))
+			ellipse(0, 0, obj.r*2, obj.r*2)
+			stroke(color(0,0,255,255))
+			line(0, 0, obj.r, 0)
+		}
+		if (obj.id == 2){
+			fill(color(255,255,255,100))
+			stroke(color(0,255,0,255))
+			obj.h = obj.h * 2
+			rect(-obj.w / 2.0, -obj.h / 2.0, obj.w , obj.h )
+			stroke(color(0,0,255,255))
+			line(0, 0, obj.w / 2.0, 0)
+		}
+		//transform reset
+		rotate(-obj.a)
+		translate(-obj.x, -(600-obj.y))
+	}
+
 }
 
+function clean_out(){
+	background(color(255, 255, 255))
+}
 
-var robots = []
-
-
-
+var ros
+var world_properties
 
 
 //$(document).bind('keypress',pressed);
 $('#btnStart').bind('click',initE)
+$('#btnStop').bind('click',stopE)
 
 function initE()
 {
-    console.log("initE")
-    var xhr = new XMLHttpRequest()
-    xhr.open('GET', 'start', true)
+	document.getElementById('btnStop').disabled = false
+	document.getElementById('btnStart').disabled = true
 
-    xhr.addEventListener('readystatechange', function(){
-        if ((xhr.readyState==4)&&(xhr.status == 200)){
-            console.log('Симуляция началась а ярослав пидр')
-            setTimeout(timer, 33)
-        }
-        else{
-            console.log(xhr.readyState)
-        }
-
-    })
-    xhr.send() // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-}
-var data
+	// Creating a ros connection
+	ros = new ROSLIB.Ros({
+			url: 'ws://localhost:9090'
+	});
 
 
-function coordrequest()
-{
-    /*var xhr = new XMLHttpRequest()
-    xhr.open('GET', 'properties', false)
-    xhr.send()
-    if (xhr.status != 200){
-        alert(xhr.status + ': ' + xhr.statusText )
+	ros.on('connection', function() {
+			console.log('Connected to websocket server.');
+	});
 
-    }
-    else{
-        var data = JSON.parse(xhr.responseText)
-        console.log(data)
+	ros.on('error', function(error) {
+		console.log('Error connecting to websocket server: ', error);
+	});
 
-    }*/
-    var xhr = new XMLHttpRequest()
-    xhr.open('GET', 'properties', true)
-    xhr.addEventListener('readystatechange', function(){
-        if ((xhr.readyState==4)&&(xhr.status == 200)){
-            console.log('Данные получены')
+	ros.on('close', function() {
+		console.log('Closed ros server')
+	});
 
-            data = JSON.parse(xhr.responseText)
-            console.log(data)
-            //console.log(data)
-            robots_recreate()
 
-        }
-        else
-        {
+	// Publishing the topic 
+	var create_world = new ROSLIB.Topic({
+		ros: ros,
+		name: '/create_world',
+		messageType: 'std_msgs/String'
+	});
 
-           // console.log(xhr.readyState)
-            if (xhr.readyState==2){
-                console.log("Запрос отправлен")
+	var world_id_message = new ROSLIB.Message({data: '1'});
 
-            }
-            if (xhr.readyState==3){
-                console.log("Обработка на сервере")
-            }
-        }
+	create_world.publish(world_id_message)
 
-    })
-    xhr.send()
+	// Subscribing to the Topic
+	world_properties = new ROSLIB.Topic({
+		ros: ros,
+		name: '/world/1/env/world_properties',
+		messageType: 'std_msgs/String'
+	});
+
+	world_properties.subscribe(function(msg) {
+		scene = JSON.parse(msg.data).properties
+		redraw()
+	});
+	 state = STATE_RUN
 }
 
-function timer()
+function stopE()
 {
-    coordrequest()
-    setTimeout(timer, 33)
+	var destroy_world = new ROSLIB.Topic({
+		ros: ros,
+		name: '/destroy_world',
+		messageType: 'std_msgs/String'
+	});
+
+	var world_id_message = new ROSLIB.Message({data: '1'});
+
+	destroy_world.publish(world_id_message)
+
+	world_properties.unsubscribe()
+
+	// disconnection
+	ros.close()
+
+	// clean_out()
+
+	document.getElementById('btnStop').disabled = true
+	document.getElementById('btnStart').disabled = false
 }
 
-function robots_clear()
-{
-    for(var i = 0; i < robots.length; i++){
-        robots[i].img.remove()
-        delete robots[i]
-    }
-    robots = []
-}
-
-function robots_create(data)
-{
-     for (var i = 0; i < data.length; i++){
-        var robot_ns = data[i]
-        robots[i] = CreateRobot(robot_ns.x, robot_ns.y, robot_ns.a, robot_ns.r)
-
-        console.log(robots[i])
-        robot_update(i)
-    }
-}
-
-function robots_update()
-{
-    for (var i = 0; i < robots.length; i++){
-        robot_update(i)
-    }
-}
-
-function robots_recreate()
-{
-    robots_clear()
-    robots_create(data)
-    robots_update()
-
-}
-
-function robot_update(index)
-{
-    //console.log(robot.x(), " ", robot.y())
-    robots[index].img.rotate(robots[index].a, robots[index].img.cx(), robots[index].img.cy())
-    robots[index].img.x(robots[index].x - robots[index].cx)
-    robots[index].img.y(robots[index].y - robots[index].cy)
-}
-
-/*function pressed(e)
-{
-    var dx = 0
-    var dy = 0
-    console.log("keypressed: ", e.keyCode)
-    if(e.keyCode == 100)
-    {
-        dx = 5
-    }
-    if(e.keyCode == 97)
-    {
-        dx = -5
-    }
-    if(e.keyCode == 115)
-    {
-        dy = 5
-    }
-    if(e.keyCode == 119)
-    {
-        dy = -5
-    }
-    robot.x += dx
-    robot.y += dy
-
-    if(e.keyCode == 101)
-    {
-        robot.a += 5
-    }
-    if(e.keyCode == 113)
-    {
-        robot.a -= 5
-    }
-    robot_update()
-
-}*/

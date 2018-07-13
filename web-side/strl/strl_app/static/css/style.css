@@ -39,3 +39,23 @@ body{
 #canvas, .w100p{
     width: 100%;
 }
+
+.p0p{
+  padding: : 0px 0px 0px 0px;
+}
+
+#btnStart{
+  margin: 5px;
+  width: 100px;
+  height: 35px;
+}
+
+#btnStop{
+  margin: 5px;
+  width: 100px;
+  height: 35px;
+}
+
+#editor_container{
+    margin: 15px;
+}
