@@ -5,7 +5,7 @@
 1. Configure the Ubuntu repositories. There are four repositories in Ubuntu: Main, Universe, Restricted and Multiverse. To install ROS we should enable access to the entire repositories.
 2. Set up your source.list. It adds the ROS repository informatino where the binaries are stored. Just execute the following commands in a terminal:
 
-# `$ sudo sh -c 'echo "deb http://packages.ros. org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'`
+    `$ sudo sh -c 'echo "deb http://packages.ros. org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'`
 
 3. Add the keys. The following is the command to add the keys:
 
