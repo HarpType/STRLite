@@ -1,6 +1,8 @@
 <!-- templates/home.html -->
 {% extends 'base.html' %}
 
+{% load staticfiles %}
+
 {% block content %}
 
 <script type="text/javascript">activePage("home_page")</script>
@@ -8,6 +10,7 @@
 <div class="col-sm-offset-4">
     <div class="col-sm-5" >
         <center>
+            <img src="{% static 'images/logo.png' %}" />
             <h1>Hi, {{ user.username }}!</h1>
             <h2>Welcome to STRLite!</h2>
         </center>

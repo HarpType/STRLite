@@ -1,4 +1,4 @@
-#!/home/varvara/git/STRLite/web-side/strl/venv/bin/python
+#!/home/varvara/git/STRLite/web-side/strl/venv/bin/python3
 from django.core import management
 
 if __name__ == "__main__":

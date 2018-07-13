@@ -40,7 +40,7 @@ def create_world(request):
         # if request.method == 'POST':
             # принимаю от Паши данные
             # init_json = request.POST.data
-            init_json = {'some': 'thing'}
+            init_json = json.dumps({'some': 'thing'})
             w = World(owner=request.user, init_info=init_json)
             w.save()
             return HttpResponse(str(w.id))
