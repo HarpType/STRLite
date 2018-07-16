@@ -2,7 +2,7 @@
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/yaroslav/programming/STRLite/ros-side/install")
+  set(CMAKE_INSTALL_PREFIX "/home/ichega/repoz/STRLite/ros-side/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -34,7 +34,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/yaroslav/programming/STRLite/ros-side/build/gtest/gtest/cmake_install.cmake")
+  include("/home/ichega/repoz/STRLite/ros-side/build/gtest/gtest/cmake_install.cmake")
 
 endif()
 

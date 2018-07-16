@@ -7,7 +7,7 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH="/home/yaroslav/programming/STRLite/ros-side/devel:$CMAKE_PREFIX_PATH"
-export PWD="/home/yaroslav/programming/STRLite/ros-side/build"
-export ROSLISP_PACKAGE_DIRECTORIES="/home/yaroslav/programming/STRLite/ros-side/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
-export ROS_PACKAGE_PATH="/home/yaroslav/programming/STRLite/ros-side/src:$ROS_PACKAGE_PATH"
+export LD_LIBRARY_PATH="/opt/ros/kinetic/lib:/opt/ros/kinetic/lib/x86_64-linux-gnu"
+export PKG_CONFIG_PATH="/opt/ros/kinetic/lib/pkgconfig:/opt/ros/kinetic/lib/x86_64-linux-gnu/pkgconfig"
+export PWD="/home/ichega/repoz/STRLite/ros-side/build"
+export ROS_PACKAGE_PATH="/home/ichega/repoz/STRLite/ros-side/src:/opt/ros/kinetic/share"
