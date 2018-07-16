@@ -117,6 +117,8 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/yaroslav/programming/STRLite/ros-side/build/gtest/cmake_install.cmake")
+  include("/home/yaroslav/programming/STRLite/ros-side/build/estr_nodes/cmake_install.cmake")
+  include("/home/yaroslav/programming/STRLite/ros-side/build/worlds_manager/cmake_install.cmake")
 
 endif()
 
