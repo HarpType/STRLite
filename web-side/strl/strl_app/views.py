@@ -45,7 +45,7 @@ def create_world(request):
             w.save()
             return HttpResponse(str(w.id))
         #else:
-            #return HttpResponse("Nothing to create")
+            # return Http404("Nothing to create.")
     else:
         return HttpResponseRedirect('/login/')
 
