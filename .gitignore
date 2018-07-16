@@ -1,3 +1,7 @@
+# ros folders
+build/
+devel/
+
 # pycharm settings
 .idea/
 
