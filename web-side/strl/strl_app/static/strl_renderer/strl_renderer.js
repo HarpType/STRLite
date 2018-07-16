@@ -89,8 +89,8 @@ function initE()
 		name: '/create_world',
 		messageType: 'std_msgs/String'
 	});
-
-	var world_id_message = new ROSLIB.Message({data: '1'});
+	var world_id_message = new ROSLIB.Message({data: '{"id": "1","world": {"gravity": -900,"objects": {"robots": [{"env": {"x": 10,"y": 10,"r": 15,"a": 0.9}}]}}}'
+	});
 
 	create_world.publish(world_id_message)
 
