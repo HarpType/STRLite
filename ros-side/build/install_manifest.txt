@@ -1,6 +1,0 @@
-/home/yaroslav/programming/STRLite/ros-side/install/_setup_util.py
-/home/yaroslav/programming/STRLite/ros-side/install/env.sh
-/home/yaroslav/programming/STRLite/ros-side/install/setup.bash
-/home/yaroslav/programming/STRLite/ros-side/install/setup.sh
-/home/yaroslav/programming/STRLite/ros-side/install/setup.zsh
-/home/yaroslav/programming/STRLite/ros-side/install/.rosinstall
