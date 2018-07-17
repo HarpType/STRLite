@@ -41,7 +41,7 @@ def editor(request):
 
 def create_world(request):
     if request.user.is_authenticated:
-        w = World(owner=request.user, init_info=[])
+        w = World(owner=request.user, init_info="[]")
         w.save()
         worlds_qs = World.objects.filter(owner=request.user)
         context = {'world_list': worlds_qs}
