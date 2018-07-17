@@ -41,7 +41,7 @@ function draw(){
 	
 	background(color(255, 255, 255))
 	const xy_step_inc = 20
-	stroke(color(150,150,150,255))
+	stroke(color(150,150,150,50))
 	for (var x = -100; x <= width + 100; x += xy_step_inc){
 		line(x,0,x,height-1)
 	}
