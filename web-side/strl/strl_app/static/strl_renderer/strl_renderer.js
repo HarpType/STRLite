@@ -15,7 +15,7 @@ function getCookie(name) {
  return cookieValue
 }
 
-
+var world_id = -1
 const STATE_STOP = 0
 const STATE_RUN = 1
 
@@ -300,7 +300,7 @@ function btnSave_click(){
 
 	xhr.send("Hello"); // (1)*/
 	console.log(scene)
-     var csrftoken = getCookie('csrftoken');
+    var csrftoken = getCookie('csrftoken');
 	$.ajax({
            url : "/editor/save/", // the endpoint,commonly same url
            type : "POST", // http method
@@ -331,3 +331,36 @@ function mousePressed(){
 */
 ///////////////////SCENE-TREE
 
+function loadWorld()
+{
+	
+    var csrftoken = getCookie('csrftoken');
+	$.ajax({
+           url : "/editor/", // the endpoint,commonly same url
+           type : "POST", // http method
+           data : { csrfmiddlewaretoken : csrftoken
+                    
+         }, // data sent with the post request
+
+         // handle a successful response
+         success : function(json) {
+         	//console.log(json)
+         	var data = JSON.parse(json)
+         	world_id = data.id
+         	console.log("World id: ", world_id)
+
+         	scene = data.scene
+         	for (var i = 0; i < scene.length; i++){
+         		add_to_scene_list(scene[i].name)
+         	}
+            //console.log('Worlds json: ', data)
+         },
+
+         // handle a non-successful response
+         error : function(xhr,errmsg,err) {
+         	console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+         }
+     });
+}
+
+loadWorld()
