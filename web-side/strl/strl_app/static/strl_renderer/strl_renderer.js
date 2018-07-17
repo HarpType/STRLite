@@ -425,9 +425,10 @@ function loadWorld() // загрузка мира из БД после загр�
 
          // handle a successful response
          success : function(json) {
-         	console.log(json)
+         	//console.log(json)
          	var data = JSON.parse(json)
          	world_id = data.id
+         	console.log("World id: ", world_id)
          	scene = data.scene
          	for (var i = 0; i < scene.length; i++){
          		add_to_scene_list(scene[i].name)
@@ -439,6 +440,7 @@ function loadWorld() // загрузка мира из БД после загр�
 		         
 		         document.getElementById('loading').style.visibility="hidden";
 		      },1000);*/
+
          },
 
          // handle a non-successful response

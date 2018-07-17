@@ -32,7 +32,6 @@ def editor(request):
         if request.method == 'POST':
             world_id = request.session.get('current_world_id')
             world = get_object_or_404(World, pk=world_id, owner=request.user)
-            
             j = world.init_info
             scene = json.loads(j)
             info_to_client = json.dumps({'id': world_id, 'scene': scene})
