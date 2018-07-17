@@ -30,13 +30,26 @@ var co = "none"
 var scene = []
 
 function setup(){
-	var canvas = createCanvas(document.getElementById('canvas_container').clientWidth-5,
-								document.getElementById('canvas_container').clientHeight-5)
+	var height = document.getElementById('canvas_container').clientHeight
+	var width = document.getElementById('canvas_container').clientWidth+11
+	var canvas = createCanvas(document.getElementById('canvas_container').clientWidth+11,
+								document.getElementById('canvas_container').clientHeight)
 	canvas.parent('canvas_container')
 	loop()
 }
 function draw(){
+	
 	background(color(255, 255, 255))
+	const xy_step_inc = 20
+	stroke(color(150,150,150,255))
+	for (var x = -100; x <= width + 100; x += xy_step_inc){
+		line(x,0,x,height-1)
+	}
+	for (var y = -100; y <= height + 100; y += xy_step_inc){
+		line(0,y,width-1,y)
+	}
+
+
 	for (var i = 0; i < scene.length; i++){
 		var obj = scene[i]
 		SceneObject_Render(obj)
@@ -72,7 +85,7 @@ function SceneObject_Render(obj)
     translate(obj.x, 600-obj.y)
     rotate(obj.a)
     if (obj.id == 1){
-        fill(color(255,255,255,100))
+        fill(color(0,0,0,15))
         if (co_name == obj.name){
 	        stroke(color(0,255,0,255))	        
         }
@@ -83,7 +96,7 @@ function SceneObject_Render(obj)
         line(0, 0, obj.r, 0)
     }
     if (obj.id == 2){
-        fill(color(255,255,255,100))
+        fill(color(0,0,0,15))
         if (co_name == obj.name){
 	        stroke(color(0,255,0,255))	        
         }
@@ -119,6 +132,41 @@ function correct_angle(){
 $('#btnStart').bind('click',initE)
 $('#btnStop').bind('click',stopE)
 
+
+function create_init_data(){
+	var data = {}
+	data.id = world_id.toString()
+	data.world = {}
+	var world = data.world
+	world.space_options = {
+		'gravity': -900
+	}
+	world.objects = {}
+	var objects = world.objects
+	objects.robots = []
+	objects.walls = []
+	for (var i = 0; i < scene.length; i++){
+		if (scene[i].id == 1){
+			objects.robots.push({
+				'x': scene[i].x,
+				'y': scene[i].y,
+				'r': scene[i].r,
+				'a': scene[i].a,
+			})
+		}
+		if (scene[i].id == 2){
+			objects.walls.push({
+				'x': scene[i].x,
+				'y': scene[i].y,
+				'w': scene[i].w,
+				'h': scene[i].h,
+				'a': scene[i].a,
+			})
+		}
+	}
+	return data
+}
+
 function initE()
 {
 	document.getElementById('btnStop').disabled = false
@@ -150,7 +198,7 @@ function initE()
 		messageType: 'std_msgs/String'
 	});
 
-	var world_id_message = new ROSLIB.Message({data: '1'});
+	var world_id_message = new ROSLIB.Message({data: JSON.stringify(create_init_data())});
 
 	create_world.publish(world_id_message)
 
@@ -200,7 +248,7 @@ function add_to_scene_list(s){
 }
 
 
-function SceneObject_Create(x, y, w, h, a){
+function SceneObject_Create(x, y, w, h, a){ // создание базового объекта
     var so = {}
     so.x = x
     so.y = y
@@ -212,7 +260,7 @@ function SceneObject_Create(x, y, w, h, a){
 }
 
 
-function Circle_Create(x,y,r){
+function Circle_Create(x,y,r){ // создание круга
     var c = SceneObject_Create(x,y,r*2,r*2,0.0)
     c.r = r
    c.id = 1
@@ -220,7 +268,7 @@ function Circle_Create(x,y,r){
     return c
 }
 
-function Box_Create(x,y,w,h){
+function Box_Create(x,y,w,h){ // создание прямоугольника
     var c = SceneObject_Create(x,y,w,h,0.0)
     c.w = w
     c.h = h
@@ -228,7 +276,7 @@ function Box_Create(x,y,w,h){
     return c
 }
 
-function select_so(){
+function select_so(){ // выбор объекта
 	for (var i = 0; i < scene.length; i++){
 		var obj = scene[i]
 		if (obj.name == co_name){
@@ -238,9 +286,11 @@ function select_so(){
 	}
 }
 
-function btnCreateCircle_click()
+function btnCreateCircle_click() // обработчик кнопки создания круга
 {
 	var circle_name = prompt('Введите название круга: ')
+	if (circle_name == null)
+		return;
 	var circle_radius = parseInt(prompt('Введите радиус круга: ', '5'))
 	add_to_scene_list(circle_name)
 	var circle = Circle_Create(300,300,circle_radius)
@@ -251,11 +301,17 @@ function btnCreateCircle_click()
 
 }
 
-function btnCreateBox_click()
+function btnCreateBox_click()// обработчик кнопки создания прямоугольника
 {
 	var box_name = prompt('Введите название прямоугольника: ')
+	if (box_name == null)
+		return;
 	var box_w = parseInt(prompt('Введите ширину прямоугольника: ', '5'))
+	if (box_w == null)
+		return;
 	var box_h = parseInt(prompt('Введите высоту прямоугольника: ', '5'))
+	if (box_h == null)
+		return;
 	add_to_scene_list(box_name)
 	var box = Box_Create(300,300,box_w, box_h)
 	box.name = box_name 
@@ -276,14 +332,32 @@ $('#scene_list').on('change', function (){
 })
 const move_speed = 2.0
 const rotate_speed = 2.0 * (1.0 / 180.0) * 3.14159
+
 function keyPressed(){
 	var ki = key.charCodeAt(0) // ki - key index
 	console.log('Code: ', ki)
+	if (ki == 46){
+		if (co_name != ""){
+			for (var i = 0; i < scene.length; i++){
+				if (scene[i] == co){
+					scene.splice(i,1)
+					delete co;
+					var x = document.getElementById("scene_list");
+					x.remove(x.selectedIndex);
+					redraw()	
+					break
+				}
+			}
+			
+
+
+		}
+	}
 	
 
 }
 
-function btnSave_click(){
+function btnSave_click(){ // сохранение
 	/*var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'create', true);
 	xhr.onreadystatechange = function() { // (3)
@@ -298,7 +372,12 @@ function btnSave_click(){
 
 	}
 
+
 	xhr.send("Hello"); // (1)*/
+	var d = create_init_data()
+	console.log(d)
+
+	document.getElementById('loading').style.visibility="visible";
 	console.log(scene)
     var csrftoken = getCookie('csrftoken');
 	$.ajax({
@@ -311,11 +390,13 @@ function btnSave_click(){
          // handle a successful response
          success : function(json) {
             console.log('response ok')
+            document.getElementById('loading').style.visibility="hidden";
          },
 
          // handle a non-successful response
          error : function(xhr,errmsg,err) {
          console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+         document.getElementById('loading').style.visibility="hidden";
          }
      });
 }
@@ -331,7 +412,7 @@ function mousePressed(){
 */
 ///////////////////SCENE-TREE
 
-function loadWorld()
+function loadWorld() // загрузка мира из БД после загрузки страницы редактора
 {
 	
     var csrftoken = getCookie('csrftoken');
@@ -346,19 +427,36 @@ function loadWorld()
          success : function(json) {
          	console.log(json)
          	var data = JSON.parse(json)
-
-         	scene = data
+         	world_id = data.id
+         	scene = data.scene
          	for (var i = 0; i < scene.length; i++){
          		add_to_scene_list(scene[i].name)
+
          	}
-            console.log('Worlds json: ', data)
+           // console.log('Worlds json: ', data)
+            document.getElementById('loading').style.visibility="hidden";
+            /*setTimeout(function(){
+		         
+		         document.getElementById('loading').style.visibility="hidden";
+		      },1000);*/
          },
 
          // handle a non-successful response
          error : function(xhr,errmsg,err) {
          	console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+         	document.getElementById('loading').style.visibility="hidden";
          }
      });
 }
+
+/*document.onreadystatechange = function () {
+  var state = document.readyState
+  if (state == 'complete') {
+      setTimeout(function(){
+         
+         document.getElementById('loading').style.visibility="hidden";
+      },1000);
+  }
+}*/
 
 loadWorld()

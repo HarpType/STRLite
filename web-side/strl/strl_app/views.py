@@ -32,7 +32,11 @@ def editor(request):
         if request.method == 'POST':
             world_id = request.session.get('current_world_id')
             world = get_object_or_404(World, pk=world_id, owner=request.user)
-            return HttpResponse(world.init_info)
+            
+            j = world.init_info
+            scene = json.loads(j)
+            info_to_client = json.dumps({'id': world_id, 'scene': scene})
+            return HttpResponse(info_to_client)
         else:
             return render(request, 'editor.html')
     else:
