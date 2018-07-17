@@ -6,4 +6,5 @@ from django.contrib.postgres.fields import JSONField
 class World(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     init_info = JSONField()
+    name = models.CharField(max_length=50, default='World')
     # history = JSONField()

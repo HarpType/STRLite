@@ -1,34 +1,12 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
-from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render_to_response, render
-from django import forms
+from django.shortcuts import render, get_object_or_404
 
 from strl_app.models import World
 
 import json
-import ast
-
-import subprocess
-from queue import Queue, Empty
-from threading import Thread
-
-
-#for communication between server and gravity
-# from relation import files, bridge
-
-
-@csrf_exempt
-def testrequest(request):
-    if request.method == 'POST':
-        # post_text = request.POST.get()
-        print(request.body)
-        data = json.loads(request.body.decode())
-        print(data)
-        # print(post_text)
-        return HttpResponse("GEEEHELEOE")
 
 
 def home(request):
@@ -38,78 +16,73 @@ def home(request):
         return HttpResponseRedirect('/login/?next=%s' % request.path)
 
 
+def worlds(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            name = request.POST.get('world_name')
+            if name == '':
+                w = World(owner=request.user, init_info="[]")
+            else:
+                w = World(owner=request.user, init_info="[]", name=name)
+            w.save()
+            worlds_qs = World.objects.filter(owner=request.user)
+            context = {'world_list': worlds_qs}
+            return render(request, 'worlds.html', context)
+        else:
+            worlds_qs = World.objects.filter(owner=request.user)
+            context = {'world_list': worlds_qs}
+            return render(request, 'worlds.html', context)
+    else:
+        return HttpResponseRedirect('/login/')
+
+
+def delete_world(request, world_id):
+    if request.user.is_authenticated:
+        world = get_object_or_404(World, pk=world_id, owner=request.user)
+        world.delete()
+        return HttpResponseRedirect('/worlds/')
+    else:
+        return HttpResponseRedirect('/login/')
+
+
+def make_world_active(request, world_id):
+    if request.user.is_authenticated:
+        world = get_object_or_404(World, pk=world_id, owner=request.user)
+        request.session['current_world_id'] = world_id
+        print(request.session.get('current_world_id'))
+        return HttpResponseRedirect('/editor/')
+    else:
+        return HttpResponseRedirect('/login/')
+
+
 def editor(request):
     if request.user.is_authenticated:
-        return render(request, 'editor.html')
+        if request.method == 'POST':
+            world_id = request.session.get('current_world_id')
+            world = get_object_or_404(World, pk=world_id, owner=request.user)
+            j = world.init_info
+            scene = json.loads(j)
+            info_to_client = json.dumps({'id': world_id, 'scene': scene})
+            return HttpResponse(info_to_client)
+        else:
+            return render(request, 'editor.html')
     else:
         return HttpResponseRedirect('/login/?next=%s' % request.path)
 
 
-def create(request):
+def save_world_properties(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            # принимаю от Паши данные
-            # init_json = request.POST.data
-            init_json = {'some': 'thing'}
-            w = World(owner=request.user, init_info=init_json)
+            init_json = request.POST.get('scene')
+            print(json.loads(init_json))
+            # w = World(owner=request.user, init_info=init_json)
+            world_id = request.session.get('current_world_id')
+            w = World.objects.get(pk=world_id)
+            w.init_info = init_json
             w.save()
-            return HttpResponse(str(w.id))
+            return HttpResponse('')
         else:
-            return HttpResponse("Nothing to create")
-    else:
-        return HttpResponseRedirect('/login/')
-
-
-def start(request):
-    if request.user.is_authenticated:
-        bridge.proc = subprocess.Popen(['python3', str(files.child_path)], stdin=subprocess.PIPE,
-                                      stdout=subprocess.PIPE, universal_newlines=True,
-                                      bufsize=1)
-        bridge.q = Queue()
-        bridge.stop_bridge = False
-        reading = Thread(target=bridge.enqueue_output, args=(bridge.proc.stdout, bridge.q))
-        reading.daemon = True
-        reading.start()
-        try:
-            line = bridge.q.get(timeout=3)
-        except Empty:
-            # stop reading thread
-            # bridge.proc.stdout.write('Stop\n')
-            bridge.stop_bridge = True
-            return HttpResponse('ERROR')
-        else:
-            if line == 'Ready\n':
-                return HttpResponse(json.dumps({'st': 'ready'}))
-            else:
-                # stop reading thread
-                # bridge.proc.stdout.write('Stop\n')
-                bridge.stop_bridge = True
-                return HttpResponse('ERROR')
-    else:
-        return HttpResponseRedirect('/login/')
-
-
-def stop(request):
-    if request.user.is_authenticated:
-        # stop reading thread
-        bridge.stop_bridge = True
-        # bridge.proc.stdout.write('Stop\n')
-        # stop gravity.py
-        bridge.proc.terminate()
-        return HttpResponse('')
-    else:
-        return HttpResponseRedirect('/login/')
-
-
-def properties(request):
-    if request.user.is_authenticated:
-        try:
-            str_data = bridge.q.get(timeout=1)
-        except Empty:
-            return HttpResponse('[]')
-        else:
-            data_to_send = ast.literal_eval(str_data[:-1])
-            return HttpResponse(json.dumps(data_to_send))
+            return Http404("Nothing to create.")
     else:
         return HttpResponseRedirect('/login/')
 
@@ -120,21 +93,6 @@ class SignUp(generic.CreateView):
     template_name = 'signup.html'
 
 
-"""def register(request):
-    form = UserCreationForm()
 
-    if request.method == 'POST':
-        data = request.POST.copy()
-        errors = form.get_validation_errors(data)
-        if not errors:
-            new_user = form.save(data)
-            return HttpResponseRedirect("/books/")
-    else:
-        data, errors = {}, {}
-
-    return render_to_response("registration/register.html", {
-        'form': forms.FormWrapper(form, data, errors)
-    })
-"""
 
 

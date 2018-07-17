@@ -1,0 +1,7 @@
+cffi==1.11.5
+Django==2.0.7
+pkg-resources==0.0.0
+psycopg2-binary==2.7.5
+pycparser==2.18
+pymunk==5.3.2
+pytz==2018.5
