@@ -1,2 +1,0 @@
-
--DCATKIN_DEVEL_PREFIX=/home/yaroslav/programming/STRLite/ros-side/devel -DCMAKE_INSTALL_PREFIX=/home/yaroslav/programming/STRLite/ros-side/install -G Unix Makefiles

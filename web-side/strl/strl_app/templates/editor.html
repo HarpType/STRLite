@@ -1,9 +1,19 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% block content %}
-<script type="text/javascript">activePage("editor_page")</script>
- <script src="{% static 'libs/dev/p5.js' %}"></script>
 
+<!--<script type="text/javascript">activePage("editor_page")</script>-->
+<style type="text/css">
+  #loading{
+    width:100%;
+    height:100%;
+    position:fixed;
+    z-index:9999;
+    background:url("http://gifimage.net/wp-content/uploads/2018/04/loader-gif-transparent-animated-7.gif") no-repeat center center rgba(0,0,0,0.25)
+}
+</style>
+ <script src="{% static 'libs/dev/p5.js' %}"></script>
+<div id="loading"></div>
 <div id="editor_container" class="h100p container-fluid text-center">
     <!-- <div class="row">
         <div class="col-sm-4 "></div>
@@ -11,20 +21,31 @@
         <div class="col-sm-2 "><button id="btnStop" type="button" class="btn btn-danger w100p">Stop</button></div>        
         <div class="col-sm-4 "></div>
     </div> -->
+
   <div id="app-space" class=" row content ">
 
 
-          
-            
+    <div  class=" col-sm-2 text-left  panel panel-default h100p">
+      <select id="scene_list" multiple="multiple" class="w100p h100p">
+      </select>
+      </ul>
+
+
+
+
+    </div>
+
           
         
       
-    
-   
-    <div id="canvas-container" class=" col-sm-10 text-left h100p">
-      <button id="btnStart" type="button" class="btn btn-success w100p"><div class="glyphicon glyphicon-play"></div> Start</button>
-        <button id="btnStop" type="button" class="btn btn-danger w100p"><div class="glyphicon glyphicon-stop"></div> Stop</button>
 
+
+   
+    <div id="canvas_container" class=" col-sm-8 text-left h100p">
+<button id="btnStart" type="button" class="btn btn-success w100p"><div class="glyphicon glyphicon-play"></div> Start</button>
+    <button id="btnStop" type="button" class="btn btn-danger w100p"><div class="glyphicon glyphicon-stop"></div> Stop</button>
+    <button id="btnSave" type="button" class="btn btn-primary w100p"><div class="
+    glyphicon glyphicon-floppy-disk"></div> Save</button>
 
 
       
@@ -55,5 +76,6 @@
   </div>
 </div>
 
-<script src="{% static 'strl_renderer/strl_renderer.js' %}"></script>
+<script type="text/javascript" src="{% static 'strl_renderer/strl_renderer.js' %}"></script>
+
 {% endblock %}
