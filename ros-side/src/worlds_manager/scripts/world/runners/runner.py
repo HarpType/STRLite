@@ -6,7 +6,7 @@ import rospy
 from ..namespace import Namespace
 
 
-class NodeManager:
+class Runner:
 	def __init__(self, namespace, name, pkg_name, exec_name):
 		self.name = Namespace(namespace=namespace, name=name)
 		self._pkg_name = pkg_name

@@ -16,12 +16,12 @@ config = {
 
 	'launch_paths': {
 		'env': {
-			'package': 'nodes',
-			'executable': 'env.py'
+			'package': 'estr_nodes',
+			'executable': 'env_run.py'
 		},
 
 		'RTS': {
-			'package': 'nodes',
+			'package': 'estr_nodes',
 			'r': 'r.py'
 		}
 	}

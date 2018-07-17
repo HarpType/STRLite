@@ -1,7 +1,7 @@
 # _*_ coding: utf-8 _*_
 
 from namespace import Namespace
-from nodes.r_node import RNode
+from runners.r_node_runner import RNodeRunner
 
 
 class Robot:
@@ -11,10 +11,10 @@ class Robot:
 		self.__init_RTS()
 
 	def __init_RTS(self):
-		self._r_node = RNode(self)
+		self._r_node_runner = RNodeRunner(self)
 
 	def launch_RTS(self, launch):
-		self._r_node.launch(launch)
+		self._r_node_runner.launch(launch)
 
 	def stop_RTS(self):
-		self._r_node.stop()
+		self._r_node_runner.stop()

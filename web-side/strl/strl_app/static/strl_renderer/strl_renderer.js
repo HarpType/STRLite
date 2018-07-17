@@ -89,7 +89,7 @@ function initE()
 		name: '/create_world',
 		messageType: 'std_msgs/String'
 	});
-	var world_id_message = new ROSLIB.Message({data: '{"id": "1","world": {"gravity": -900,"objects": {"robots": [{"env": {"x": 10,"y": 10,"r": 15,"a": 0.9}}]}}}'
+	var world_id_message = new ROSLIB.Message({data: '{"id": "1","world": {"space_options": {"gravity": -900},"objects": {"robots": [{"x": 10,"y": 1000,"r": 15,"a": 0.9}], "walls": []}}}'
 	});
 
 	create_world.publish(world_id_message)
@@ -102,7 +102,18 @@ function initE()
 	});
 
 	world_properties.subscribe(function(msg) {
-		scene = JSON.parse(msg.data).properties
+		
+		var data = JSON.parse(msg.data).world
+		console.log(data)
+		scene = []
+		for (var i = 0; i < data.objects.robots.length; i++){
+			data.objects.robots[i].id = 1
+			scene.push(data.objects.robots[i])
+		}
+		for (var i = 0; i < data.objects.walls.length; i++){
+			data.objects.walls[i].id = 2
+			scene.push(data.objects.walls[i])
+		}
 		redraw()
 	});
 	 state = STATE_RUN

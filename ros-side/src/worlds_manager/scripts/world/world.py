@@ -2,7 +2,7 @@
 
 from roslaunch.scriptapi import ROSLaunch
 
-from nodes.environment import EnvNode
+from runners.env_runner import EnvNode
 from namespace import Namespace
 from .robot import Robot
 
