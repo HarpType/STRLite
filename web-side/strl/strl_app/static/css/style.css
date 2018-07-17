@@ -80,4 +80,5 @@ position: absolute;
 .autohw{
   
   width: 100%;
+  overflow: hidden;
 }
