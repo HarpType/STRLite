@@ -32,7 +32,10 @@ def editor(request):
         if request.method == 'POST':
             world_id = request.session.get('current_world_id')
             world = get_object_or_404(World, pk=world_id, owner=request.user)
-            return HttpResponse(world.init_info)
+            j = world.init_info
+            scene = json.loads(j)
+            info_to_client = {'id': world_id, 'scene': scene}
+            return HttpResponse(info_to_client)
         else:
             return render(request, 'editor.html')
     else:
@@ -41,7 +44,8 @@ def editor(request):
 
 def create_world(request):
     if request.user.is_authenticated:
-        w = World(owner=request.user, init_info=[])
+        # l = json.dumps([])
+        w = World(owner=request.user, init_info='[]')
         w.save()
         worlds_qs = World.objects.filter(owner=request.user)
         context = {'world_list': worlds_qs}
