@@ -7,8 +7,8 @@ import rospy
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import Pose2D
 
-old_ball_position = ()
-ball_position = ()
+old_ball_position = None
+ball_position = None
 
 
 def pos_callback(msg):
@@ -31,17 +31,28 @@ def move_ball(r_name):
 
 	course = 1
 	change_tick = 0
+	flag = False
+	eps = 1.5
 	while not rospy.is_shutdown():
-		if old_ball_position == ball_position:
-			change_tick += 1
-		else:
-			change_tick = 0
+		if old_ball_position:
+			if abs(old_ball_position[0] - ball_position[0]) < eps:
+				change_tick += 1
+			else:
+				if not flag:
+					change_tick += 1
+				else:
+					change_tick = 0
 
-		if change_tick > 20:
-			course *= -1
-			change_tick = 0
+			if flag:
+				if change_tick > 0:
+					course *= -1
+					change_tick = 0
+			else:
+				if change_tick > 20:
+					change_tick = 0
+					flag = True
 
-		vel.linear.x = 20 * course
+		vel.linear.x = 150 * course
 		vel.linear.y = 0
 		vel.linear.z = 0
 

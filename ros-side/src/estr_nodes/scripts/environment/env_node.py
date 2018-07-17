@@ -28,7 +28,7 @@ class EnvNode(ROSNode):
 		self.dt = 1. / config['environment']['rate']
 
 		self.space = pymunk.Space()
-		self.space.gravity = (0.0, -90.0)
+		self.space.gravity = (0.0, -900.0)
 
 		self.robot_pubs = []
 		self.robots = []
@@ -66,7 +66,7 @@ class EnvNode(ROSNode):
 
 	def __init_walls(self):
 		for i in range(len(self.properties['objects']['walls'])):
-			wall = Wall(i, self.properties['objects']['walls'])
+			wall = Wall(i, self.properties['objects']['walls'][i])
 			self.space.add(wall.body, wall.shape)
 			self.walls.append(wall)
 
@@ -95,7 +95,7 @@ class EnvNode(ROSNode):
 			wall = self.walls[i]
 			self.properties['objects']['walls'][i]['x'] = wall.body.position.x
 			self.properties['objects']['walls'][i]['y'] = wall.body.position.y
-			self.properties['objects']['walls'][i]['w'] = wall.weight
+			self.properties['objects']['walls'][i]['w'] = wall.width
 			self.properties['objects']['walls'][i]['h'] = wall.height
 			self.properties['objects']['walls'][i]['a'] = wall.body.angle
 

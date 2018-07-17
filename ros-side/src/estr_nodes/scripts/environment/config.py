@@ -1,7 +1,7 @@
 config = {
 	'environment': {
 		'name': 'env',
-		'rate': 10,
+		'rate': 50,
 		'pub_que_size': 3
 	},
 

@@ -10,9 +10,9 @@ class Robot:
 		self.__init_basis(properties)
 
 	def __init_body(self):
-		mass = config['robots']['mass']
-		moment = pymunk.moment_for_circle(mass, 0, self.radius)
-		self.body = pymunk.Body(mass, moment)
+		self.mass = config['robots']['mass']
+		self.moment = pymunk.moment_for_circle(self.mass, 0, self.radius)
+		self.body = pymunk.Body(self.mass, self.moment)
 
 	def __init_basis(self, properties):
 		self.radius = properties['r']
