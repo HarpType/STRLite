@@ -80,10 +80,3 @@
 5. ~$ cd /web-side/strl/
 5. ~$ python3 manage.py runserver
 
-
-
-
-
-
-
-

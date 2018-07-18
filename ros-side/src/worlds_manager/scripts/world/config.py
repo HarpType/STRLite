@@ -1,3 +1,5 @@
+# _*_ coding: utf-8 _*_
+
 import os
 ros_pkg_path = os.path.join(os.path.dirname(__file__), '../../')
 
@@ -14,8 +16,13 @@ config = {
 
 	'launch_paths': {
 		'env': {
-			'package': 'nodes',
-			'executable': 'env.py'
+			'package': 'estr_nodes',
+			'executable': 'env_run.py'
+		},
+
+		'RTS': {
+			'package': 'estr_nodes',
+			'r': 'r.py'
 		}
 	}
 }

@@ -82,8 +82,8 @@ function SceneObject_Render(obj)
     
     resetMatrix()    	
     //transform apply
-    translate(obj.x, 600-obj.y)
-    rotate(obj.a)
+    translate(obj.x, height-obj.y)
+    rotate(-obj.a)
     if (obj.id == 1){
         fill(color(0,0,0,15))
         if (co_name == obj.name){
@@ -122,9 +122,9 @@ var world_properties
 function correct_angle(){
 	for (var i = 0; i < scene.length; i++){
 		var obj = scene[i]
-		obj.a = - obj.a
-		if (obj.id == 2)
-			obj.h = obj.h * 2
+		obj.a = -obj.a
+		/*if (obj.id == 2)
+			obj.h = obj.h * 2*/
 	}
 }
 
@@ -146,6 +146,8 @@ function create_init_data(){
 	objects.robots = []
 	objects.walls = []
 	for (var i = 0; i < scene.length; i++){
+		var obj = scene[i]
+
 		if (scene[i].id == 1){
 			objects.robots.push({
 				'x': scene[i].x,
@@ -197,21 +199,32 @@ function initE()
 		name: '/create_world',
 		messageType: 'std_msgs/String'
 	});
-
-	var world_id_message = new ROSLIB.Message({data: JSON.stringify(create_init_data())});
+	var message_for_send = JSON.stringify(create_init_data())
+	console.log(message_for_send)
+	var world_id_message = new ROSLIB.Message({data: message_for_send});
 
 	create_world.publish(world_id_message)
 
 	// Subscribing to the Topic
 	world_properties = new ROSLIB.Topic({
 		ros: ros,
-		name: '/world/1/env/world_properties',
+		name: '/world/'+world_id.toString()+'/env/world_properties',
 		messageType: 'std_msgs/String'
 	});
 
 	world_properties.subscribe(function(msg) {
-		scene = JSON.parse(msg.data).properties
-		correct_angle()
+		var data = JSON.parse(msg.data).world
+		console.log(data)
+		scene = []
+		for (var i = 0; i < data.objects.robots.length; i++){
+			data.objects.robots[i].id = 1
+			scene.push(data.objects.robots[i])
+		}
+		for (var i = 0; i < data.objects.walls.length; i++){
+			data.objects.walls[i].id = 2
+			scene.push(data.objects.walls[i])
+		}
+		//correct_angle()
 		redraw()
 	});
 	 state = STATE_RUN
@@ -225,7 +238,7 @@ function stopE()
 		messageType: 'std_msgs/String'
 	});
 
-	var world_id_message = new ROSLIB.Message({data: '1'});
+	var world_id_message = new ROSLIB.Message({data: world_id.toString()});
 
 	destroy_world.publish(world_id_message)
 
@@ -233,6 +246,7 @@ function stopE()
 
 	// disconnection
 	ros.close()
+	//loadWorld()
 
 	// clean_out()
 
@@ -414,7 +428,7 @@ function mousePressed(){
 
 function loadWorld() // загрузка мира из БД после загрузки страницы редактора
 {
-	
+	scene = []
     var csrftoken = getCookie('csrftoken');
 	$.ajax({
            url : "/editor/", // the endpoint,commonly same url

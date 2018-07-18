@@ -3,9 +3,9 @@
 
 import rospy
 from std_msgs.msg import String
-
-from rospy_message_converter import json_message_converter
 import json
+
+from rospy_message_converter import message_converter
 
 from world.config import config
 from world.world import World
@@ -16,15 +16,14 @@ world_create_reqs = []
 world_destroy_ids = []
 
 
-def create_world(world_id):
-	# world_json = json_message_converter.convert_json_to_ros_message(world_req)
-	# world_data = json.loads(world_json)
+def create_world(world_req):
+	world_data = json.loads(world_req.data)
 
-	if world_id.data in worlds:
+	if world_data['id'] in worlds:
 		return
-	rospy.loginfo('Creating world: {}'.format(world_id.data))
+	rospy.loginfo('Creating world: {}'.format(world_data['id']))
 
-	worlds[world_id.data] = World(world_id=world_id.data, world_init_prop="stub")
+	worlds[world_data['id']] = World(world_id=world_data['id'], properties=world_data['world'])
 
 
 def destroy_world(world_id):
@@ -37,7 +36,6 @@ def destroy_world(world_id):
 
 
 def create_id_append(world_req):
-
 	world_create_reqs.append(world_req)
 
 

@@ -1,6 +1,7 @@
-# ros folders
-build/
+# catkin folders
 devel/
+build/
+install/
 
 # pycharm settings
 .idea/

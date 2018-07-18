@@ -5,5 +5,5 @@
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
 subdirs(gtest)
-subdirs(node_manager)
-subdirs(nodes)
+subdirs(estr_nodes)
+subdirs(worlds_manager)
