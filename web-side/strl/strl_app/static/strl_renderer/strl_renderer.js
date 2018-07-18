@@ -140,8 +140,8 @@ function create_init_data(){
 	var world = data.world
 	world.space_options = {
 		'gravity': {
-			'x': 0,
-			'y': 0,
+			'x': Number(document.getElementById("gravity_x").value),
+			'y': Number(document.getElementById("gravity_y").value),
 		}
 	}
 	world.objects = {}
@@ -484,3 +484,6 @@ function loadWorld() // загрузка мира из БД после загр�
 }*/
 
 loadWorld()
+
+document.getElementById("gravity_x").value = 0.0
+document.getElementById("gravity_y").value = -90.0

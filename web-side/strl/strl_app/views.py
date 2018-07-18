@@ -49,7 +49,6 @@ def make_world_active(request, world_id):
     if request.user.is_authenticated:
         world = get_object_or_404(World, pk=world_id, owner=request.user)
         request.session['current_world_id'] = world_id
-        print(request.session.get('current_world_id'))
         return HttpResponseRedirect('/editor/')
     else:
         return HttpResponseRedirect('/login/')
@@ -74,7 +73,6 @@ def save_world_properties(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             init_json = request.POST.get('scene')
-            print(json.loads(init_json))
             # w = World(owner=request.user, init_info=init_json)
             world_id = request.session.get('current_world_id')
             w = World.objects.get(pk=world_id)

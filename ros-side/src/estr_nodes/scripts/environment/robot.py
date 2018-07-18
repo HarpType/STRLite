@@ -4,11 +4,13 @@ from config import config
 
 
 class Robot:
-	def __init__(self, robot_id, properties):
+	def __init__(self, robot_id, properties, gravity_type):
 		self.id = robot_id
 		self.script_id = properties['script_id']
 
 		self.__init_basis(properties)
+
+		self.gravity_type = gravity_type
 
 	def __init_body(self):
 		self.mass = config['robots']['mass']
@@ -25,4 +27,9 @@ class Robot:
 
 	def update_velocity(self, msg):
 		# hardcoding!!! TODO: wrappers
-		self.body._set_velocity((msg.linear.x, self.body.velocity.y))
+		# self.body._set_velocity((msg.linear.x, self.body.velocity.y+msg.linear.y))
+		# self.body.apply_impulse_at_local_point((self.mass*msg.linear.x, self.mass*msg.linear.y))
+		if self.gravity_type == 0:
+			self.body._set_velocity((msg.linear.x, self.body.velocity.y))
+		else:
+			self.body._set_velocity((msg.linear.x, msg.linear.y))

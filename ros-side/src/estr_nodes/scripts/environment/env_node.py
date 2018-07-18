@@ -28,9 +28,10 @@ class EnvNode(ROSNode):
 		self.dt = 1. / config['environment']['rate']
 
 		self.space = pymunk.Space()
-		self.space.gravity = (
-			self.properties['space_options']['gravity']['x'],
-			self.properties['space_options']['gravity']['y'])
+		self.space.gravity = (self.properties['space_options']['gravity']['x'], self.properties['space_options']['gravity']['y'])
+		self.gravity_type = 0
+		if (self.space.gravity.y == 0):
+			self.gravity_type = 2
 
 		self.robot_pubs = []
 		self.robots = []
@@ -60,7 +61,7 @@ class EnvNode(ROSNode):
 
 	def __init_robots(self):
 		for i in range(len(self.properties['objects']['robots'])):
-			robot = Robot(i, self.properties['objects']['robots'][i])
+			robot = Robot(i, self.properties['objects']['robots'][i], self.gravity_type)
 			self.space.add(robot.body, robot.shape)
 			self.add_to_pub(robot)
 			self.add_to_sub(robot)
