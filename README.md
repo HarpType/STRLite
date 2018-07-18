@@ -67,8 +67,10 @@
 <<<<<<< HEAD
 
 #### Build
+
 1. ~$ cd ros-side
 2. ~$ catkin_make
+
 
 #### Launch
 
@@ -76,7 +78,7 @@
 2. ~$ roslaunch rosbridge_server rosbridge_websocket.launch 
 3. ~$ source ros-side/devel/setup.bash
 4. ~$ rosrun node_manager worlds_manager.py 
-go to web-side/strl/
+5. ~$ cd /web-side/strl/
 5. ~$ python3 manage.py runserver
 
 =======
