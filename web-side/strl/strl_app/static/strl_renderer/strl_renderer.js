@@ -139,7 +139,10 @@ function create_init_data(){
 	data.world = {}
 	var world = data.world
 	world.space_options = {
-		'gravity': -900
+		'gravity': {
+			'x': 0,
+			'y': 0,
+		}
 	}
 	world.objects = {}
 	var objects = world.objects
@@ -154,6 +157,7 @@ function create_init_data(){
 				'y': scene[i].y,
 				'r': scene[i].r,
 				'a': scene[i].a,
+				'script_id': scene[i].script_id
 			})
 		}
 		if (scene[i].id == 2){
@@ -302,13 +306,17 @@ function select_so(){ // выбор объекта
 
 function btnCreateCircle_click() // обработчик кнопки создания круга
 {
+
 	var circle_name = prompt('Введите название круга: ')
 	if (circle_name == null)
 		return;
+	var circle_script_id = parseInt(prompt('Введите номер скрипта: (1 or 2):', '1'))
+
 	var circle_radius = parseInt(prompt('Введите радиус круга: ', '5'))
 	add_to_scene_list(circle_name)
 	var circle = Circle_Create(300,300,circle_radius)
-	circle.name = circle_name 
+	circle.name = circle_name
+	circle.script_id = circle_script_id 
     scene.push(circle)
     redraw()
     console.log(scene.length)

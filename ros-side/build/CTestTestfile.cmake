@@ -1,6 +1,6 @@
 # CMake generated Testfile for 
-# Source directory: /home/ichega/repoz/STRLite/STRLite/ros-side/src
-# Build directory: /home/ichega/repoz/STRLite/STRLite/ros-side/build
+# Source directory: /home/yaroslav/programming/STRLite/ros-side/src
+# Build directory: /home/yaroslav/programming/STRLite/ros-side/build
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.

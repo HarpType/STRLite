@@ -29,8 +29,8 @@ class EnvNode(ROSNode):
 
 		self.space = pymunk.Space()
 		self.space.gravity = (
-			self.properties['space_option']['gravity']['x'],
-			self.properties['space_option']['gravity']['y'])
+			self.properties['space_options']['gravity']['x'],
+			self.properties['space_options']['gravity']['y'])
 
 		self.robot_pubs = []
 		self.robots = []

@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ichega/repoz/STRLite/STRLite/ros-side/src
+CMAKE_SOURCE_DIR = /home/yaroslav/programming/STRLite/ros-side/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ichega/repoz/STRLite/STRLite/ros-side/build
+CMAKE_BINARY_DIR = /home/yaroslav/programming/STRLite/ros-side/build
 
 # Utility rule file for run_tests.
 
@@ -67,6 +67,6 @@ CMakeFiles/run_tests.dir/clean:
 .PHONY : CMakeFiles/run_tests.dir/clean
 
 CMakeFiles/run_tests.dir/depend:
-	cd /home/ichega/repoz/STRLite/STRLite/ros-side/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ichega/repoz/STRLite/STRLite/ros-side/src /home/ichega/repoz/STRLite/STRLite/ros-side/src /home/ichega/repoz/STRLite/STRLite/ros-side/build /home/ichega/repoz/STRLite/STRLite/ros-side/build /home/ichega/repoz/STRLite/STRLite/ros-side/build/CMakeFiles/run_tests.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/yaroslav/programming/STRLite/ros-side/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/yaroslav/programming/STRLite/ros-side/src /home/yaroslav/programming/STRLite/ros-side/src /home/yaroslav/programming/STRLite/ros-side/build /home/yaroslav/programming/STRLite/ros-side/build /home/yaroslav/programming/STRLite/ros-side/build/CMakeFiles/run_tests.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/run_tests.dir/depend
 
