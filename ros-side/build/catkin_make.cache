@@ -1,2 +1,2 @@
 node_manager:nodes
--DCATKIN_DEVEL_PREFIX=/home/ichega/repoz/STRLite/ros-side/devel -DCMAKE_INSTALL_PREFIX=/home/ichega/repoz/STRLite/ros-side/install -G Unix Makefiles
+-DCATKIN_DEVEL_PREFIX=/home/ichega/repoz/STRLite/STRLite/ros-side/devel -DCMAKE_INSTALL_PREFIX=/home/ichega/repoz/STRLite/STRLite/ros-side/install -G Unix Makefiles
