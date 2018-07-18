@@ -5,8 +5,8 @@ from ..config import config
 
 
 class RNodeRunner(Runner):
-	def __init__(self, owner):
+	def __init__(self, owner, script_id):
 		Runner.__init__(
-			self, namespace=owner.name.create_namespace(), name='r',
+			self, namespace=owner.name.create_namespace(), name='r'+str(script_id),
 			pkg_name=config['launch_paths']['RTS']['package'],
-			exec_name=config['launch_paths']['RTS']['r'])
+			exec_name='r'+str(script_id)+'.py')

@@ -27,7 +27,7 @@ class World:
 
 	def __init_robots(self):
 		for i in range(len(self.properties['objects']['robots'])):
-			robot = Robot(owner=self, robot_id=str(i))
+			robot = Robot(owner=self, robot_id=str(i), properties=self.properties['objects']['robots'][i])
 			self.robots.append(robot)
 
 	def launch_robots(self):

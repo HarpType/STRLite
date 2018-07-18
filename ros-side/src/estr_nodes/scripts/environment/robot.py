@@ -6,6 +6,7 @@ from config import config
 class Robot:
 	def __init__(self, robot_id, properties):
 		self.id = robot_id
+		self.id = properties['script_id']
 
 		self.__init_basis(properties)
 

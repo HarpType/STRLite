@@ -64,6 +64,7 @@
     <code> create database django_db owner user_name; </code>
 
 5. Set up django settings with your postgres.
+<<<<<<< HEAD
 
 #### Build
 1. ~$ cd ros-side
@@ -78,3 +79,5 @@
 go to web-side/strl/
 5. ~$ python3 manage.py runserver
 
+=======
+>>>>>>> cff3860a31ea7379c71ff743602c9121d8e897a8

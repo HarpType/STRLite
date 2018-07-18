@@ -28,7 +28,9 @@ class EnvNode(ROSNode):
 		self.dt = 1. / config['environment']['rate']
 
 		self.space = pymunk.Space()
-		self.space.gravity = (0.0, -900.0)
+		self.space.gravity = (
+			self.properties['space_option']['gravity']['x'],
+			self.properties['space_option']['gravity']['y'])
 
 		self.robot_pubs = []
 		self.robots = []
@@ -48,12 +50,12 @@ class EnvNode(ROSNode):
 
 	def add_to_pub(self, robot):
 		pub_name = self.env_name.replace('env', '')
-		pub_name += 'robot/{}/r/position'.format(robot.id)
+		pub_name += 'robot/{}/r{}/position'.format(robot.id, robot.script_id)
 		self.robot_pubs.append(rospy.Publisher(pub_name, Pose2D, queue_size=config['robots']['pub_que_size']))
 
 	def add_to_sub(self, robot):
 		sub_name = self.env_name.replace('env', '')
-		sub_name += 'robot/{}/r/velocity'.format(robot.id)
+		sub_name += 'robot/{}/r{}/velocity'.format(robot.id, robot.script_id)
 		rospy.Subscriber(sub_name, Twist, robot.update_velocity)
 
 	def __init_robots(self):
